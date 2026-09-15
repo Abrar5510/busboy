@@ -83,7 +83,7 @@
       <geom class="object" name="spoon_head" type="ellipsoid" size="0.022 0.015 0.005" pos="0.07 0 -0.001" mass="0.01" material="metal_mat"/>
     </body>
     <!-- Cup: +z is opening-up. r=20 mm (jaw max gap measured 111.5 mm; 40 mm diameter opens with margin at q~0.8). -->
-    <body name="cup" pos="0.32 -0.04 0.54">
+    <body name="cup" pos="0.37 -0.03 0.54">
       <freejoint name="cup"/>
       <geom class="object" name="cup" type="cylinder" size="0.02 0.04" mass="0.03" rgba="0.8 0.3 0.2 1"/>
     </body>

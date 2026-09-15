@@ -85,9 +85,9 @@ def main():
                 text = task_text(task, "train", rng)
                 for obs, action in buf:
                     frame = {**obs, "action": action.astype(np.float32), "task": text}
-                    ds.add_frame(frame)
+                    ds.add_frame(dict(frame))  # add_frame pops "task"; each dataset needs its own dict
                     if ds_act is not None and task == "set_table":
-                        ds_act.add_frame(frame)
+                        ds_act.add_frame(dict(frame))
                 ds.save_episode()
                 if ds_act is not None and task == "set_table":
                     ds_act.save_episode()
