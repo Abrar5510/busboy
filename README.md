@@ -94,10 +94,26 @@ uv run mjpython -m scripts.eval --policy smolvla --ckpt $CKPT --viewer          
 **4. OpenVINO export and Intel benchmark:**
 ```bash
 ACT=outputs/train/act_dinner/checkpoints/last/pretrained_model
-uv run python -m scripts.export_openvino --act-ckpt $ACT       # IR + end-to-end parity check
-uv run python -m scripts.bench_intel --ckpt $ACT               # run on x86 Intel hardware
-uv run python -m scripts.eval --policy act --ckpt $ACT --backend openvino
+uv run python -m scripts.export_openvino --act-ckpt $ACT       # IR + end-to-end parity check (f32)
+uv run python -m scripts.bench_intel --ckpt $ACT               # torch vs OpenVINO on every device found
+uv run python -m scripts.eval --policy act --ckpt $ACT --backend openvino --ov-device GPU   # CPU | GPU | NPU
 ```
+
+### Reproducing on Intel hardware (one command)
+
+On an Intel system, e.g. the hackathon Core Ultra box (Ubuntu 24.04, Arc iGPU + NPU):
+```bash
+bash scripts/intel_quickstart.sh <act pretrained_model dir or HF repo id>
+```
+The script runs the whole Intel path in one go:
+- installs `uv` if missing
+- builds the exact environment from `uv.lock` (Python 3.12)
+- runs the sim self-check
+- exports ACT to OpenVINO with the parity check
+- benchmarks torch vs OpenVINO on CPU, GPU and NPU
+- runs closed-loop MuJoCo episodes on the IR on each device
+
+The lockfile has been verified to install on Linux x86_64 (all 125 packages have wheels). The Intel numbers in the results table come from running this script on Intel hardware. The development machine is Apple Silicon, where `bench_intel.py` marks its output `intel: false`.
 
 **5. Docker** (CPU, headless). Either mount a checkpoint or pass an HF Hub repo id as `--ckpt`:
 ```bash

@@ -57,23 +57,28 @@ def main():
             policy.predict_action_chunk(batch)
 
     core = ov.Core()
-    default_precision = core.get_property("CPU", "INFERENCE_PRECISION_HINT")  # ov.Type
-    # f32 matches torch numerically (parity-checked); the device default (f16 ARM / bf16 AMX) is faster but approximate.
-    precisions = {"f32": "f32", default_precision.get_type_name(): default_precision}
-    compiled = {name: core.compile_model(args.ir, "CPU", {"PERFORMANCE_HINT": "LATENCY", "INFERENCE_PRECISION_HINT": v})
-                for name, v in precisions.items()}
-    default_precision = default_precision.get_type_name()
+    cpu_default = core.get_property("CPU", "INFERENCE_PRECISION_HINT").get_type_name()  # f32 x86, f16 ARM, bf16 AMX
+    # CPU at f32 matches torch numerically (parity-checked); device defaults are faster but approximate.
+    configs = {"cpu_f32": ("CPU", {"INFERENCE_PRECISION_HINT": "f32"}), f"cpu_{cpu_default}": ("CPU", {})}
+    for dev in core.available_devices:  # Intel Core Ultra: GPU (Arc iGPU) and NPU, at their default precision
+        if dev.startswith(("GPU", "NPU")):
+            configs[dev.lower().replace(".", "")] = (dev, {})
 
     cpu = cpu_model()
     report = {
         "machine": {"cpu": cpu, "platform": platform.platform(), "intel": "intel" in cpu.lower(),
                     "torch": torch.__version__, "torch_threads": torch.get_num_threads(), "openvino": ov.get_version(),
-                    "openvino_default_precision": default_precision},
+                    "openvino_cpu_default_precision": cpu_default,
+                    "openvino_devices": {d: core.get_property(d, "FULL_DEVICE_NAME") for d in core.available_devices}},
         "act_torch_cpu": bench(torch_fn),
     }
-    for p, c in compiled.items():
-        report[f"act_openvino_cpu_{p}"] = bench(lambda c=c: c(np_inputs))
-    report["speedup_p50_f32"] = report["act_torch_cpu"]["p50_ms"] / report["act_openvino_cpu_f32"]["p50_ms"]
+    for name, (dev, cfg) in configs.items():
+        try:
+            c = core.compile_model(args.ir, dev, {"PERFORMANCE_HINT": "LATENCY", **cfg})
+            report[f"act_openvino_{name}"] = bench(lambda c=c: c(np_inputs))
+        except Exception as e:  # one device failing to compile this graph shouldn't sink the whole report
+            report[f"act_openvino_{name}"] = {"error": str(e)[:300]}
+    report["speedup_p50_cpu_f32"] = report["act_torch_cpu"]["p50_ms"] / report["act_openvino_cpu_f32"]["p50_ms"]
     if not report["machine"]["intel"]:
         print(f"WARNING: CPU is {cpu!r}, not Intel; do not report these numbers as Intel results.")
     with open(args.out, "w") as f:

@@ -1,10 +1,10 @@
 """Closed-loop evaluation of ACT / SmolVLA checkpoints in the dinner-table MuJoCo env.
 
-    python scripts/eval.py --policy smolvla --ckpt outputs/train/smolvla_dinner/checkpoints/last/pretrained_model
-    python scripts/eval.py --policy smolvla --ckpt ... --paraphrases eval          # held-out instruction wording
-    python scripts/eval.py --policy smolvla --ckpt ... --rand heavy                # 1.5x randomization
-    python scripts/eval.py --policy act --ckpt ... --backend openvino --ir results/act_dinner.xml
-    mjpython scripts/eval.py ... --viewer                                          # live MuJoCo viewer (macOS)
+    python -m scripts.eval --policy smolvla --ckpt outputs/train/smolvla_dinner/checkpoints/last/pretrained_model
+    python -m scripts.eval --policy smolvla --ckpt ... --paraphrases eval          # held-out instruction wording
+    python -m scripts.eval --policy smolvla --ckpt ... --rand heavy                # 1.5x randomization
+    python -m scripts.eval --policy act --ckpt ... --backend openvino --ov-device GPU   # CPU | GPU | NPU
+    mjpython -m scripts.eval ... --viewer                                          # live MuJoCo viewer (macOS)
 
 Writes results/{policy}_{backend}_{rand}_{paraphrases}.json and, with --video, mp4s under results/videos/.
 """
@@ -40,11 +40,12 @@ class OpenVINOACT:
     """ACT action-chunk IR behind the policy's select_action/reset interface.
     Input order must match scripts/export_openvino.py: state, then config.image_features order."""
 
-    def __init__(self, ir_path, config):
+    def __init__(self, ir_path, config, device="CPU"):
         import openvino as ov
 
-        # f32 so closed-loop actions match torch (CPU default is f16 on ARM, bf16 on AMX Xeons).
-        self.model = ov.Core().compile_model(str(ir_path), "CPU", {"INFERENCE_PRECISION_HINT": "f32"})
+        # f32 so closed-loop actions match torch (CPU default is f16 on ARM, bf16 on AMX). NPU runs f16 only.
+        cfg = {} if device.startswith("NPU") else {"INFERENCE_PRECISION_HINT": "f32"}
+        self.model = ov.Core().compile_model(str(ir_path), device, cfg)
         self.config = config
         self.image_keys = list(config.image_features)
         self.queue = []
@@ -100,6 +101,7 @@ def main():
     ap.add_argument("--ckpt", required=True, help="pretrained_model dir or HF repo id")
     ap.add_argument("--backend", default="torch", choices=["torch", "openvino"])
     ap.add_argument("--ir", default="results/act_dinner.xml", help="OpenVINO IR for --backend openvino")
+    ap.add_argument("--ov-device", default="CPU", help="OpenVINO device for --backend openvino: CPU, GPU, NPU")
     ap.add_argument("--episodes", type=int, default=20, help="per task")
     ap.add_argument("--rand", default="nominal", choices=["nominal", "heavy"])
     ap.add_argument("--paraphrases", default="train", choices=["train", "eval", "all"])
@@ -114,14 +116,14 @@ def main():
     if args.backend == "openvino":
         if args.policy != "act":
             raise SystemExit("--backend openvino is only supported for ACT")
-        args.device = "cpu"
+        args.device = "cpu"  # pre/post processors run on CPU around the IR
     tasks = ["set_table"] if args.policy == "act" else args.tasks  # ACT has no language input: set_table only
 
     policy = get_policy_class(args.policy).from_pretrained(args.ckpt).to(args.device).eval()
     pre, post = make_pre_post_processors(policy.config, args.ckpt,
                                          preprocessor_overrides={"device_processor": {"device": args.device}})
     if args.backend == "openvino":
-        policy = OpenVINOACT(args.ir, policy.config)
+        policy = OpenVINOACT(args.ir, policy.config, args.ov_device)
     infer_every = policy.config.n_action_steps  # one model call per chunk; the rest are queue pops
 
     env = DinnerEnv()
@@ -131,7 +133,8 @@ def main():
 
         viewer = mujoco.viewer.launch_passive(env.model, env.data)
 
-    tag = f"{args.policy}_{args.backend}_{args.rand}_{args.paraphrases}"
+    backend = args.backend if args.backend == "torch" else f"openvino-{args.ov_device.lower()}"
+    tag = f"{args.policy}_{backend}_{args.rand}_{args.paraphrases}"
     out = Path(args.out)
     (out / "videos").mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(0)
@@ -159,8 +162,9 @@ def main():
         print(f"== {task}: {wins}/{args.episodes}", flush=True)
 
     summary = {
-        "policy": args.policy, "backend": args.backend, "ckpt": str(args.ckpt), "rand": args.rand,
-        "paraphrases": args.paraphrases, "device": args.device, "tasks": results,
+        "policy": args.policy, "backend": backend, "ckpt": str(args.ckpt), "rand": args.rand,
+        "paraphrases": args.paraphrases, "device": args.device if args.backend == "torch" else args.ov_device,
+        "tasks": results,
         "p50_infer_ms": 1000 * float(np.median(all_lat)), "p95_infer_ms": 1000 * float(np.percentile(all_lat, 95)),
         "machine": {"platform": platform.platform(), "processor": platform.processor()},
     }
