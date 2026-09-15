@@ -1,0 +1,7 @@
+.git
+.venv
+data
+outputs
+results/videos
+**/__pycache__
+*.onnx

@@ -4,3 +4,4 @@ outputs/
 results/videos/
 __pycache__/
 *.onnx
+MUJOCO_LOG.TXT
