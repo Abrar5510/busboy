@@ -61,7 +61,8 @@ def export_act(ckpt, out_xml, parity_n):
         torch.onnx.export(wrapper, example, str(onnx_path), input_names=names, output_names=["action"],
                           opset_version=17, dynamo=False)
     ov.save_model(ov.convert_model(str(onnx_path)), str(out_xml))
-    compiled = ov.Core().compile_model(str(out_xml), "CPU")
+    # Pin f32: OpenVINO's CPU default is f16 on ARM (and bf16 on AMX Xeons), which alone breaks 1e-3 parity.
+    compiled = ov.Core().compile_model(str(out_xml), "CPU", {"INFERENCE_PRECISION_HINT": "f32"})
 
     # End-to-end parity: full torch pipeline vs processors + IR, first action of the chunk.
     errs = []

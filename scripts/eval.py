@@ -43,7 +43,8 @@ class OpenVINOACT:
     def __init__(self, ir_path, config):
         import openvino as ov
 
-        self.model = ov.Core().compile_model(str(ir_path), "CPU")
+        # f32 so closed-loop actions match torch (CPU default is f16 on ARM, bf16 on AMX Xeons).
+        self.model = ov.Core().compile_model(str(ir_path), "CPU", {"INFERENCE_PRECISION_HINT": "f32"})
         self.config = config
         self.image_keys = list(config.image_features)
         self.queue = []

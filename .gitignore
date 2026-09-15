@@ -5,3 +5,6 @@ results/videos/
 __pycache__/
 *.onnx
 MUJOCO_LOG.TXT
+results/smoke/
+results/*.bin
+results/*.xml

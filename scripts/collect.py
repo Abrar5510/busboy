@@ -61,14 +61,14 @@ def main():
     rng = np.random.default_rng(args.seed_start)
     counts = {t: 0 for t in args.tasks}
     target = args.episodes_per_task * len(args.tasks)
-    seed, attempts, t0 = args.seed_start, 0, time.time()
+    seed, attempts, t0 = args.seed_start, 0, time.monotonic()
     try:
         # Round-robin over tasks so a budget stop still leaves a balanced dataset.
         while any(c < args.episodes_per_task for c in counts.values()):
             for task in args.tasks:
                 if counts[task] >= args.episodes_per_task:
                     continue
-                hours = (time.time() - t0) / 3600
+                hours = (time.monotonic() - t0) / 3600
                 if hours > TIME_BUDGET_H:
                     print(f"time budget {TIME_BUDGET_H} h exceeded; stopping with {counts}")
                     return
@@ -93,7 +93,7 @@ def main():
                     ds_act.save_episode()
                 counts[task] += 1
                 done = sum(counts.values())
-                elapsed = time.time() - t0
+                elapsed = time.monotonic() - t0
                 print(f"[{done}/{target}] {task} seed={seed - 1} frames={len(buf)} attempts={attempts} "
                       f"{done / elapsed * 3600:.0f} eps/h, projected total {elapsed / done * target / 3600:.2f} h",
                       flush=True)
