@@ -1,0 +1,14 @@
+[project]
+name = "dinner-vla"
+version = "0.1.0"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "imageio[ffmpeg]>=2.37.4",
+    "lerobot[smolvla,training]==0.6.1",
+    "mink>=1.3.0",
+    "mujoco>=3.13.0",
+    "ompl>=2.0.1",
+    "onnx>=1.22.0",
+    "opencv-python>=5.0.0.93",
+    "openvino>=2024.4",
+]
