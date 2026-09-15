@@ -214,6 +214,7 @@ _Pending: filled from `results/*.json`._ All runs use held-out seeds, 10 episode
 - **ACT has no language input,** so it covers `set_table` only; SmolVLA covers all tasks.
 - **SmolVLA isn't OpenVINO-exported end to end;** its Intel path is PyTorch XPU/CPU.
 - **The shipped SmolVLA dataset was assembled from two collection passes.** Single-arm and `set_table` episodes predate the phase planner; `cup_tr`, `handoff_fork` and `full_setting` were recollected with the final layout. `scripts.collect` reproduces all six tasks in one pass.
+- **293 episodes, not 300:** `handoff_fork` has 43. A collector killed mid-encode (memory pressure) left 432 rows of an unregistered episode in its data parquet. Metadata stayed self-consistent, but absolute row indices shifted every later episode, so frames were read against another episode's video timestamps — silently, until a lookup ran past a video file's end and crashed training at the same step twice. That 7-episode shard is excluded; `scripts/validate_dataset.py` checks for orphan rows, frame-index overshoot and per-file frame counts, and is worth running on any assembled dataset before training.
 
 ## Repo layout
 
