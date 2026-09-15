@@ -66,15 +66,20 @@ uv run python -m scripts.collect --episodes-per-task 50
 
 **2. Train** (Apple Silicon shown; use `--policy.device=cuda` on NVIDIA):
 ```bash
+# ACT baseline: ~1.3 steps/s on an M4, 8k steps in ~1.7 h
 PYTORCH_ENABLE_MPS_FALLBACK=1 uv run lerobot-train --policy.type=act --policy.device=mps --policy.push_to_hub=false \
   --dataset.repo_id=local/dinner_set_table --dataset.root=data/dinner_set_table \
-  --batch_size=8 --steps=8000 --output_dir=outputs/train/act_dinner --wandb.enable=false
+  --batch_size=8 --steps=8000 --save_freq=2000 --output_dir=outputs/train/act_dinner --wandb.enable=false
 
+# SmolVLA: ~7.2 s/step on an M4, 7k steps (~1.3 epochs of ~42k frames) in ~14 h.
+# smolvla_base names its cameras camera1..3, so dataset cameras are renamed onto them.
 PYTORCH_ENABLE_MPS_FALLBACK=1 uv run lerobot-train --policy.path=lerobot/smolvla_base --policy.device=mps --policy.push_to_hub=false \
   --dataset.repo_id=local/dinner_table --dataset.root=data/dinner_table \
   --rename_map='{"observation.images.front": "observation.images.camera1", "observation.images.left_wrist": "observation.images.camera2", "observation.images.right_wrist": "observation.images.camera3"}' \
-  --batch_size=8 --steps=20000 --output_dir=outputs/train/smolvla_dinner --wandb.enable=false
+  --batch_size=8 --steps=7000 --policy.scheduler_decay_steps=7000 --save_freq=1000 \
+  --output_dir=outputs/train/smolvla_dinner --wandb.enable=false
 ```
+On a CUDA GPU, use `--steps=20000` (the SmolVLA docs default) and leave the scheduler at its default.
 
 **3. Closed-loop evaluation** (held-out seeds ≥ 10000):
 ```bash
