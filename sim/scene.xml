@@ -1,0 +1,91 @@
+<mujoco model="dinner_table">
+  <!-- 1/480 s: 16 substeps = exactly 1/30 s control period. elliptic/impratio kept from menagerie so101 for grasping. -->
+  <option timestep="0.0020833333333333333" integrator="implicitfast" cone="elliptic" impratio="10"/>
+  <compiler angle="radian" autolimits="true"/>
+
+  <visual>
+    <global offwidth="1280" offheight="720"/>
+    <headlight ambient="0.3 0.3 0.3" diffuse="0.4 0.4 0.4" specular="0 0 0"/>
+    <quality shadowsize="4096"/>
+  </visual>
+
+  <asset>
+    <model name="so101" file="so101/so101.xml"/>
+
+    <texture name="sky" type="skybox" builtin="gradient" rgb1="0.6 0.7 0.8" rgb2="0.1 0.1 0.15" width="256" height="256"/>
+    <texture name="floor_tex" type="2d" builtin="checker" rgb1="0.25 0.25 0.27" rgb2="0.3 0.3 0.32" width="256" height="256"/>
+    <material name="floor_mat" texture="floor_tex" texrepeat="8 8"/>
+
+    <!-- Table materials: all defined at load, swapped at reset via geom_matid. -->
+    <texture name="tex_a" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".3 .4 .5" width="256" height="256"/>
+    <material name="mat_a" texture="tex_a"/>
+    <texture name="tex_b" type="2d" builtin="flat" rgb1=".55 .27 .07" width="8" height="8"/>
+    <material name="mat_b" texture="tex_b"/>
+    <texture name="tex_c" type="2d" builtin="flat" rgb1=".75 .75 .78" width="8" height="8"/>
+    <material name="mat_c" texture="tex_c"/>
+
+    <material name="plate_mat" rgba="0.95 0.95 0.93 1"/>
+    <material name="metal_mat" rgba="0.75 0.76 0.8 1" specular="0.8" shininess="0.8"/>
+    <material name="target_mat" rgba="0.1 0.9 0.2 0.25"/>
+  </asset>
+
+  <default>
+    <default class="object">
+      <geom condim="4" friction="1.0 0.005 0.0001" solref="0.01 1"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <light name="key" pos="0.3 0.2 1.6" dir="-0.2 -0.1 -1" directional="false" castshadow="true" diffuse="0.7 0.7 0.7"/>
+    <geom name="floor" type="plane" size="2 2 0.05" material="floor_mat"/>
+
+    <!-- Table: top surface at z=0.5. No rgba on the top geom (material color must win). -->
+    <body name="table" pos="0 0 0">
+      <geom name="table_top" type="box" size="0.45 0.32 0.02" pos="0 0 0.48" material="mat_a"/>
+      <geom type="box" size="0.02 0.02 0.23" pos="0.41 0.28 0.23" rgba="0.3 0.2 0.1 1" contype="0" conaffinity="0"/>
+      <geom type="box" size="0.02 0.02 0.23" pos="-0.41 0.28 0.23" rgba="0.3 0.2 0.1 1" contype="0" conaffinity="0"/>
+      <geom type="box" size="0.02 0.02 0.23" pos="0.41 -0.28 0.23" rgba="0.3 0.2 0.1 1" contype="0" conaffinity="0"/>
+      <geom type="box" size="0.02 0.02 0.23" pos="-0.41 -0.28 0.23" rgba="0.3 0.2 0.1 1" contype="0" conaffinity="0"/>
+      <body name="look_at" pos="0 0.0 0.5"/>
+    </body>
+
+    <!-- Arms on the near (-y) edge, yawed so q=0 reaches toward +y (verified: gripperframe@q0 is +0.39 m in y).
+         Layout keeps every heavy-randomized grasp/place within the ~0.30 m top-down reach (see reach check). -->
+    <body name="left_mount" pos="-0.19 -0.13 0.5" euler="0 0 1.5708">
+      <attach model="so101" body="base" prefix="left_"/>
+    </body>
+    <body name="right_mount" pos="0.19 -0.13 0.5" euler="0 0 1.5708">
+      <attach model="so101" body="base" prefix="right_"/>
+    </body>
+
+    <!-- Behind/above the arms so image-left = robot-left = "left of the plate". -->
+    <camera name="front" mode="targetbody" target="look_at" pos="0 -0.62 1.05" fovy="55"/>
+    <camera name="top" mode="targetbody" target="look_at" pos="0 -0.05 1.35" fovy="50"/>
+
+    <!-- Plate: reference object. Target sites are children so they follow its pose. -->
+    <body name="plate" pos="0 0 0.506">
+      <freejoint name="plate"/>
+      <geom class="object" name="plate" type="cylinder" size="0.06 0.006" mass="0.2" material="plate_mat"/>
+      <site name="fork_target" pos="-0.095 0 -0.005" type="cylinder" size="0.02 0.0005" material="target_mat" group="4"/>
+      <site name="spoon_target" pos="0.095 0 -0.005" type="cylinder" size="0.02 0.0005" material="target_mat" group="4"/>
+      <site name="cup_target" pos="0.08 0.07 -0.005" type="cylinder" size="0.025 0.0005" material="target_mat" group="4"/>
+    </body>
+
+    <!-- Cutlery: long axis = body local +x (head at +x). Handles 12 mm thick so the jaw can grip. -->
+    <body name="fork" pos="-0.31 0.05 0.506" euler="0 0 1.5708">
+      <freejoint name="fork"/>
+      <geom class="object" name="fork_handle" type="box" size="0.05 0.006 0.006" mass="0.02" material="metal_mat"/>
+      <geom class="object" name="fork_head" type="box" size="0.02 0.012 0.003" pos="0.07 0 -0.003" mass="0.01" material="metal_mat"/>
+    </body>
+    <body name="spoon" pos="0.31 0.05 0.506" euler="0 0 1.5708">
+      <freejoint name="spoon"/>
+      <geom class="object" name="spoon_handle" type="box" size="0.05 0.006 0.006" mass="0.02" material="metal_mat"/>
+      <geom class="object" name="spoon_head" type="ellipsoid" size="0.022 0.015 0.005" pos="0.07 0 -0.001" mass="0.01" material="metal_mat"/>
+    </body>
+    <!-- Cup: +z is opening-up. r=20 mm (jaw max gap measured 111.5 mm; 40 mm diameter opens with margin at q~0.8). -->
+    <body name="cup" pos="0.16 0.1 0.54">
+      <freejoint name="cup"/>
+      <geom class="object" name="cup" type="cylinder" size="0.02 0.04" mass="0.03" rgba="0.8 0.3 0.2 1"/>
+    </body>
+  </worldbody>
+</mujoco>
