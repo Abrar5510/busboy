@@ -121,9 +121,9 @@ class DinnerEnv:
 
     # ---------------------------------------------------------------- reset
     def _sample_layout(self, rng, s):
-        """Object xy/yaw around the scene's nominal layout, rejecting overlaps and
-        objects that start inside their own target zone. ponytail: rejection sampling,
-        50 tries then accept; fine at these densities."""
+        """Object xy/yaw around the scene's nominal layout, rejecting overlaps and objects
+        that start near any target zone (a blocker there makes the place pose unreachable).
+        ponytail: rejection sampling, 50 tries then accept; fine at these densities."""
         m = self.model
         nominal = {}
         for o in OBJECTS:
@@ -135,9 +135,9 @@ class DinnerEnv:
             pxy, pyaw = lay["plate"]
             ok = all(np.linalg.norm(lay[a][0] - lay[b][0]) > FOOTPRINT[a] + FOOTPRINT[b] + 0.01
                      for i, a in enumerate(OBJECTS) for b in OBJECTS[i + 1:])
-            for o, site in START_TARGET.items():
+            for site in START_TARGET.values():
                 target_xy = pxy + _rot2(pyaw) @ m.site_pos[m.site(site).id][:2]
-                ok &= np.linalg.norm(lay[o][0] - target_xy) > 2 * PLACE_TOL
+                ok &= all(np.linalg.norm(lay[o][0] - target_xy) > FOOTPRINT[o] + 2 * PLACE_TOL for o in START_TARGET)
             if ok:
                 break
         return lay
