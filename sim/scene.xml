@@ -59,6 +59,9 @@
     </body>
 
     <!-- Behind/above the arms so image-left = robot-left = "left of the plate". -->
+    <!-- Hand-off relay: one arm sets an object down here, the other picks it up. Reachable by both bases. -->
+    <site name="relay" pos="0 -0.11 0.501" type="box" size="0.06 0.02 0.0005" material="target_mat" group="4"/>
+
     <camera name="front" mode="targetbody" target="look_at" pos="0 -0.35 1.3" fovy="60"/>
     <camera name="top" mode="targetbody" target="look_at" pos="0 -0.05 1.35" fovy="50"/>
 
@@ -68,7 +71,7 @@
       <geom class="object" name="plate" type="cylinder" size="0.06 0.006" mass="0.2" material="plate_mat"/>
       <site name="fork_target" pos="-0.095 0 -0.005" type="cylinder" size="0.02 0.0005" material="target_mat" group="4"/>
       <site name="spoon_target" pos="0.095 0 -0.005" type="cylinder" size="0.02 0.0005" material="target_mat" group="4"/>
-      <site name="cup_target" pos="0.08 0.07 -0.005" type="cylinder" size="0.025 0.0005" material="target_mat" group="4"/>
+      <site name="cup_target" pos="0.15 0.07 -0.005" type="cylinder" size="0.025 0.0005" material="target_mat" group="4"/>
     </body>
 
     <!-- Cutlery: long axis = body local +x (head at +x). Handles 12 mm thick so the jaw can grip. -->

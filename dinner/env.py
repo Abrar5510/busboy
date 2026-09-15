@@ -43,7 +43,12 @@ OBJECTS = ("plate", "fork", "spoon", "cup")
 FOOTPRINT = {"plate": 0.065, "fork": 0.05, "spoon": 0.05, "cup": 0.025}  # for layout rejection sampling
 START_TARGET = {"fork": "fork_target", "spoon": "spoon_target", "cup": "cup_target"}
 TARGET_YAW_OFFSET = {"fork": np.pi / 2, "spoon": np.pi / 2}  # across the table, head away
+RELAY_YAW = 0.0  # cutlery lies along the table edge on the relay
 
+# "arms": every arm that must end released. "place": (object, target site, arm) checked for success.
+# "sequence" (optional): phases of {arm: (object, site)}; arms within a phase move simultaneously, phases run
+# in order and each is planned from the simulator state the previous one left. Without it, all "place"
+# entries form one simultaneous phase. "swap_cutlery": fork starts on the right, spoon on the left.
 TASKS = {
     "fork_left": {
         "arms": ["left"], "place": [("fork", "fork_target", "left")],
@@ -67,18 +72,42 @@ TASKS = {
         "eval": ["Move the cup to the upper right corner of the place setting."],
     },
     "set_table": {
-        "arms": ["left", "right"], "subtasks": ["fork_left", "spoon_right"],
+        "arms": ["left", "right"],
         "place": [("fork", "fork_target", "left"), ("spoon", "spoon_target", "right")],
         "train": ["Set the table.",
                   "Set the table for dinner.",
                   "Lay out the fork and spoon around the plate."],
         "eval": ["Arrange the cutlery for a meal."],
     },
+    "handoff_fork": {
+        "arms": ["right", "left"], "swap_cutlery": True, "timeout_s": 35,
+        "sequence": [{"right": ("fork", "relay")}, {"left": ("fork", "fork_target")}],
+        "place": [("fork", "fork_target", "left")],
+        "train": ["Hand the fork from the right arm to the left arm and place it left of the plate.",
+                  "Pass the fork over to the left arm, then set it to the left of the plate.",
+                  "Use both arms to move the fork from the right side to the left of the plate."],
+        "eval": ["Transfer the fork between the arms and put it on the plate's left side."],
+    },
+    "full_setting": {
+        "arms": ["left", "right"], "timeout_s": 35,
+        "sequence": [{"left": ("fork", "fork_target"), "right": ("spoon", "spoon_target")},
+                     {"right": ("cup", "cup_target")}],
+        "place": [("fork", "fork_target", "left"), ("spoon", "spoon_target", "right"), ("cup", "cup_target", "right")],
+        "train": ["Set a full place setting: fork, spoon, then cup.",
+                  "Place the fork left and the spoon right of the plate, then put the cup at the top right.",
+                  "Set out the fork, the spoon and the cup around the plate."],
+        "eval": ["Lay out the fork, the spoon and finally the cup for dinner."],
+    },
 }
 
 
 def task_text(task, split, rng):
     return str(rng.choice(TASKS[task][split]))
+
+
+def task_phases(task):
+    spec = TASKS[task]
+    return spec.get("sequence") or [{arm: (obj, site) for obj, site, arm in spec["place"]}]
 
 
 def _ang_diff(a, b):
@@ -104,6 +133,7 @@ class DinnerEnv:
         self.free_adr = {o: m.jnt_qposadr[m.joint(o).id] for o in OBJECTS}
         self.body_id = {o: m.body(o).id for o in OBJECTS}
         self.obj_geoms = [g for g in range(m.ngeom) if m.geom_bodyid[g] in self.body_id.values()]
+        self.relay_xy = m.site_pos[m.site("relay").id][:2].copy()  # worldbody site: site_pos is world
 
         self.table_geom_id = m.geom("table_top").id
         self.table_top_z = m.geom_pos[self.table_geom_id][2] + m.geom_size[self.table_geom_id][2]
@@ -120,15 +150,17 @@ class DinnerEnv:
         self.target_yaw = {}
 
     # ---------------------------------------------------------------- reset
-    def _sample_layout(self, rng, s):
-        """Object xy/yaw around the scene's nominal layout, rejecting overlaps and objects
-        that start near any target zone (a blocker there makes the place pose unreachable).
+    def _sample_layout(self, rng, s, swap_cutlery=False):
+        """Object xy/yaw around the scene's nominal layout, rejecting overlaps and objects that start
+        near any target zone or the relay (a blocker there makes the place pose unreachable).
         ponytail: rejection sampling, 50 tries then accept; fine at these densities."""
         m = self.model
         nominal = {}
         for o in OBJECTS:
             q0 = m.qpos0[self.free_adr[o]:self.free_adr[o] + 7]
             nominal[o] = (q0[:2].copy(), 2 * np.arctan2(q0[6], q0[3]))
+        if swap_cutlery:
+            nominal["fork"], nominal["spoon"] = nominal["spoon"], nominal["fork"]
         for _ in range(50):
             lay = {o: (xy + rng.uniform(-OBJ_XY * s, OBJ_XY * s, 2), yaw + rng.uniform(-OBJ_YAW * s, OBJ_YAW * s))
                    for o, (xy, yaw) in nominal.items()}
@@ -138,11 +170,12 @@ class DinnerEnv:
             for site in START_TARGET.values():
                 target_xy = pxy + _rot2(pyaw) @ m.site_pos[m.site(site).id][:2]
                 ok &= all(np.linalg.norm(lay[o][0] - target_xy) > FOOTPRINT[o] + 2 * PLACE_TOL for o in START_TARGET)
+            ok &= all(np.linalg.norm(lay[o][0] - self.relay_xy) > FOOTPRINT[o] + 0.06 for o in OBJECTS)
             if ok:
                 break
         return lay
 
-    def reset(self, seed, level="nominal"):
+    def reset(self, seed, level="nominal", task=None):
         m, d = self.model, self.data
         rng = np.random.default_rng(seed)
         s = RAND_LEVELS[level]
@@ -156,7 +189,7 @@ class DinnerEnv:
         d.qpos[self.state_idx] = home
         d.ctrl[self.act_ids] = home
 
-        lay = self._sample_layout(rng, s)
+        lay = self._sample_layout(rng, s, swap_cutlery=bool(task and TASKS[task].get("swap_cutlery")))
         for o, (xy, yaw) in lay.items():
             a = self.free_adr[o]
             d.qpos[a:a + 2] = xy
@@ -220,7 +253,9 @@ class DinnerEnv:
         return self.data.ctrl[self.grip_act[arm]] >= GRIP_OPEN_BAND
 
     def success(self, task):
-        return all(self._place_ok(o, site) and self.released(arm) for o, site, arm in TASKS[task]["place"])
+        spec = TASKS[task]
+        return (all(self._place_ok(o, site) for o, site, _ in spec["place"])
+                and all(self.released(a) for a in spec["arms"]))
 
     def set_free(self, name, pos, quat):
         a = self.free_adr[name]
@@ -250,6 +285,12 @@ if __name__ == "__main__":
                 assert not env.success(t), f"{t} trivially solved at reset (seed {seed}, {level})"
             yaws.add(round(env.target_yaw["fork"], 4))
     assert len(yaws) > 1, "target_yaw does not follow plate yaw"
+
+    for seed in range(5):
+        env.reset(seed, "heavy", task="handoff_fork")
+        assert d.xpos[env.body_id["fork"]][0] > 0 > d.xpos[env.body_id["spoon"]][0], "hand-off layout not swapped"
+        assert not env.success("handoff_fork")
+    assert task_phases("set_table") == [{"left": ("fork", "fork_target"), "right": ("spoon", "spoon_target")}]
 
     # _place_ok: teleport onto targets.
     env.reset(0)

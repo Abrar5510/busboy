@@ -71,10 +71,10 @@ def overlay(obs, text, p50_ms, t):
 
 
 def run_episode(env, policy, pre, post, task, text, seed, level, infer_every, writer=None, viewer=None):
-    obs = env.reset(seed, level)
+    obs = env.reset(seed, level, task)
     policy.reset()
     lat = []
-    for step in range(TIMEOUT_S * FPS):
+    for step in range(int(TASKS[task].get("timeout_s", TIMEOUT_S) * FPS)):
         batch = pre(to_batch(obs, text))
         tic = time.perf_counter()
         with torch.inference_mode():
