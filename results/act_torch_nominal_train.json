@@ -1,0 +1,32 @@
+{
+  "policy": "act",
+  "backend": "torch",
+  "ckpt": "outputs/train/act_dinner/checkpoints/last/pretrained_model",
+  "rand": "nominal",
+  "paraphrases": "train",
+  "device": "cpu",
+  "act_temporal_ensemble": null,
+  "tasks": {
+    "fork_left": "n/a",
+    "spoon_right": "n/a",
+    "cup_tr": "n/a",
+    "set_table": {
+      "success_rate": 0.0,
+      "successes": 0,
+      "episodes": 10,
+      "mean_time_to_success_s": null,
+      "object_placed": {
+        "fork": 0,
+        "spoon": 5
+      }
+    },
+    "handoff_fork": "n/a",
+    "full_setting": "n/a"
+  },
+  "p50_infer_ms": 131.01320799796667,
+  "p95_infer_ms": 337.18160835069267,
+  "machine": {
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "processor": "arm"
+  }
+}

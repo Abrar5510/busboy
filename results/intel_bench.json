@@ -1,0 +1,43 @@
+{
+  "machine": {
+    "cpu": "Apple M4",
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "intel": false,
+    "torch": "2.11.0",
+    "torch_threads": 4,
+    "openvino": "2026.3.1-22476-759c5a6ab8c-releases/2026/3",
+    "openvino_cpu_default_precision": "f16",
+    "openvino_devices": {
+      "CPU": "Apple M4"
+    }
+  },
+  "act_torch_cpu": {
+    "p50_ms": 86.10308349943807,
+    "p95_ms": 256.89441635031466,
+    "throughput_inferences_per_s": 8.734396218521587,
+    "n": 100
+  },
+  "act_openvino_cpu_f32": {
+    "p50_ms": 129.33779199920536,
+    "p95_ms": 186.72317354921688,
+    "throughput_inferences_per_s": 7.034158499570877,
+    "n": 100
+  },
+  "act_openvino_cpu_f16": {
+    "p50_ms": 64.9083749995043,
+    "p95_ms": 99.41153125046185,
+    "throughput_inferences_per_s": 14.070943851394942,
+    "n": 100
+  },
+  "act_openvino_cpu_int8": {
+    "p50_ms": 64.7376874994734,
+    "p95_ms": 85.66266250027184,
+    "throughput_inferences_per_s": 15.235390484446523,
+    "n": 100
+  },
+  "speedup_p50_vs_torch": {
+    "cpu_f32": 0.6657225407092698,
+    "cpu_f16": 1.3265327240143607,
+    "cpu_int8": 1.3300302625134466
+  }
+}

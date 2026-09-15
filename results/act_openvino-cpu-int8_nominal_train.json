@@ -1,0 +1,32 @@
+{
+  "policy": "act",
+  "backend": "openvino-cpu-int8",
+  "ckpt": "outputs/train/act_dinner/checkpoints/last/pretrained_model",
+  "rand": "nominal",
+  "paraphrases": "train",
+  "device": "CPU",
+  "act_temporal_ensemble": null,
+  "tasks": {
+    "fork_left": "n/a",
+    "spoon_right": "n/a",
+    "cup_tr": "n/a",
+    "set_table": {
+      "success_rate": 0.1,
+      "successes": 1,
+      "episodes": 10,
+      "mean_time_to_success_s": 4.6,
+      "object_placed": {
+        "fork": 1,
+        "spoon": 4
+      }
+    },
+    "handoff_fork": "n/a",
+    "full_setting": "n/a"
+  },
+  "p50_infer_ms": 49.6542295004474,
+  "p95_infer_ms": 188.94585450107115,
+  "machine": {
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "processor": "arm"
+  }
+}

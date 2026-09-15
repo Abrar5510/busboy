@@ -1,0 +1,24 @@
+{
+  "openvino_version": "2026.3.1-22476-759c5a6ab8c-releases/2026/3",
+  "act": {
+    "ir": "results/act_dinner.xml",
+    "inputs": [
+      "state",
+      "img_front",
+      "img_left_wrist",
+      "img_right_wrist"
+    ],
+    "parity_max_abs_err": 0.0004787445068359375,
+    "parity_tol": 0.001,
+    "parity_pass": true,
+    "int8": {
+      "ir": "results/act_dinner_int8.xml",
+      "mode": "weights+activations INT8 (NNCF PTQ, transformer mode, 300 calibration scenes)",
+      "max_abs_action_err_vs_f32_rad": 0.015721499919891357,
+      "size_mb": {
+        "f32": 66.11331,
+        "int8": 33.551282
+      }
+    }
+  }
+}
