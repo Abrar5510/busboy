@@ -1,10 +1,15 @@
-# Dinner-Table VLA: dual SO-101 arms in MuJoCo
+# Bimanual Dinner-Table VLA: dual SO-101 in MuJoCo, optimized with OpenVINO
 
-Two simulated SO-101 arms set a dinner table from natural-language instructions.
-Demonstrations come from a motion-planning expert (mink IK + OMPL). They are collected under domain
-randomization, stored as LeRobot v3 datasets, and used to fine-tune **SmolVLA** (language-conditioned VLA) and
-an **ACT** baseline. The trained policies then run closed-loop back in MuJoCo, and ACT is exported to
-**OpenVINO** for Intel CPU inference.
+Two simulated SO-101 arms set a dinner table from natural-language commands:
+- single-arm placements
+- simultaneous dual-arm placement
+- a hand-off between the arms
+- a multi-step full place setting
+
+Demonstrations come from a motion-planning expert (mink IK + OMPL), collected under domain randomization into
+LeRobot v3 datasets. They train **SmolVLA** (language + 3 cameras → 12-D joint actions) and an **ACT**
+baseline. Both run closed-loop back in MuJoCo. ACT is exported to **OpenVINO** in f32 and INT8, benchmarked on
+CPU / iGPU / NPU, and reproducible on Intel hardware with one command.
 
 > Demo video: _link pending_
 
@@ -13,109 +18,157 @@ an **ACT** baseline. The trained policies then run closed-loop back in MuJoCo, a
 ```mermaid
 flowchart LR
     S["MuJoCo scene<br/>sim/scene.xml<br/>2x SO-101, plate/cup/fork/spoon,<br/>front + 2 wrist cams"] --> E
-    DR["Domain randomization<br/>layout, table material, colors,<br/>lights, camera, mass/friction"] --> E
-    E["Expert<br/>mink IK waypoints +<br/>OMPL RRTConnect transits"] --> D["LeRobot v3 datasets<br/>dinner_table (all tasks)<br/>dinner_set_table (ACT)"]
+    DR["Domain randomization<br/>placement, mass, friction, table material,<br/>colors, lights, camera"] --> E
+    E["Expert<br/>mink IK waypoints + OMPL RRTConnect,<br/>phase-wise bimanual planning"] --> D["LeRobot v3 dataset<br/>6 tasks, 3 paraphrases each"]
     D --> V["SmolVLA fine-tune<br/>(language-conditioned)"]
-    D --> A["ACT baseline<br/>(set_table only)"]
-    V --> L["Closed-loop MuJoCo eval<br/>scripts/eval.py"]
+    D --> A["ACT baseline<br/>(set_table)"]
+    V --> L["Closed-loop MuJoCo eval<br/>scripts/eval.py, 10 seeds"]
     A --> L
-    A --> O["OpenVINO IR"] --> I["Intel CPU<br/>scripts/bench_intel.py"]
+    A --> O["OpenVINO IR<br/>f32 (parity-checked) + INT8 (NNCF)"] --> I["Intel Core Ultra<br/>CPU / Arc iGPU / NPU<br/>scripts/bench_intel.py"]
+    O --> L
 ```
+
+**Observe → Understand → Plan → Act → Optimize:**
+1. **Observe:** front + two wrist cameras, plus 12-D joint state.
+2. **Understand:** SmolVLA fuses the instruction with the images (SmolVLM2 backbone).
+3. **Plan:** SmolVLA's action expert predicts 50-step action chunks for both arms jointly.
+4. **Act:** the chunks run as dual SO-101 joint position targets at 30 Hz.
+5. **Optimize:** ACT goes through OpenVINO f32 / INT8 on CPU, iGPU or NPU.
 
 ## Tasks
 
-| Task | Arms | Train instructions (3 per task) | Held-out eval instruction |
+| Task | Bimanual pattern | Train instructions (3 per task, one shown) | Held-out eval instruction |
 |---|---|---|---|
-| `fork_left` | left | "Place the fork to the left of the plate." ... | "Position the fork left of the plate." |
-| `spoon_right` | right | "Place the spoon to the right of the plate." ... | "Position the spoon right of the plate." |
-| `cup_tr` | right | "Put the cup at the top right of the plate." ... | "Move the cup to the upper right corner of the place setting." |
-| `set_table` | **both at once** | "Set the table." ... | "Arrange the cutlery for a meal." |
+| `fork_left` | left arm | "Place the fork to the left of the plate." | "Position the fork left of the plate." |
+| `spoon_right` | right arm | "Place the spoon to the right of the plate." | "Position the spoon right of the plate." |
+| `cup_tr` | right arm | "Put the cup at the top right of the plate." | "Move the cup to the upper right corner of the place setting." |
+| `set_table` | **both arms simultaneously** | "Set the table." | "Arrange the cutlery for a meal." |
+| `handoff_fork` | **hand-off** (right → relay → left) | "Hand the fork from the right arm to the left arm and place it left of the plate." | "Transfer the fork between the arms and put it on the plate's left side." |
+| `full_setting` | **multi-step**: fork + spoon together, then cup | "Set a full place setting: fork, spoon, then cup." | "Lay out the fork, the spoon and finally the cup for dinner." |
 
-A placement counts as a success when all of these hold:
-- the object is within 3 cm of its target
-- it rests on the table
-- cutlery yaw is within 45° of the target yaw
+A task succeeds only when all of these hold:
+- every object is within 3 cm of its target and resting on the table
+- cutlery is within 45° of the target yaw
 - the cup is within 30° of upright (an upside-down cup fails)
-- the arm's gripper has released
+- every arm involved has released
 
-## Domain randomization
+## Bimanual coordination strategy
 
-Every range below is multiplied by `RAND_LEVELS`: nominal = 1.0 (training), heavy = 1.5 (robustness eval).
+A task is a list of **phases** (`dinner/env.py: task_phases`):
+- **Within a phase, arms move simultaneously.** Each arm is planned against the other arm's pose in that phase, so collision checking covers the other arm.
+- **Phases run in order.** Each phase is planned from the simulator state the previous one left, so small placement errors don't compound.
+
+That one mechanism gives three behaviors:
+- **Simultaneous** (`set_table`): both arms place cutlery at once.
+- **Sequence** (`full_setting`): fork and spoon together, then the cup is placed next to the already-placed spoon.
+- **Hand-off** (`handoff_fork`): the fork starts out of the left arm's reach. The right arm sets it on a relay pad both arms can reach, and the left arm picks it up there and places it. An in-air hand-off was prototyped (the giver holds the handle tail while the taker grips the other end), but the taker's grip slipped when the giver released, so the relay is used.
+
+Expert per pick-place:
+1. mink IK solves collision-checked pregrasp / grasp / above-target / place poses.
+2. OMPL RRTConnect plans the transits in joint space. The validity checker covers the table, the other arm, objects and self-collision, and restores the sim state after every check.
+3. The return-home path is planned around the object at its new position.
+
+Expert success (10 seeds each): **10/10 on all six tasks**.
+
+## Training approach
+
+- **Data:** about 50 successful expert episodes per task at 30 fps, recorded with `observation.images.{front,left_wrist,right_wrist}` (256×256), `observation.state` (12) and `action` (12). Each episode is labeled with one of the task's 3 train paraphrases.
+- **SmolVLA:** fine-tuned from `lerobot/smolvla_base` with the vision encoder frozen and only the action expert trained. The dataset cameras are mapped onto the base model's `camera1..3`. Trained on an Apple M4 (MPS) within a fixed time budget; step counts are under Quickstart.
+- **ACT:** trained from scratch on `set_table`. It has no language input, so it serves as the OpenVINO deployment baseline.
+
+## Robustness
+
+Every episode is randomized. Each range below is multiplied by a level: nominal = 1.0 (training and main eval), heavy = 1.5 (a stress test beyond the training distribution).
 
 | Factor | Nominal range |
 |---|---|
-| Object and plate position / yaw | ±4 cm / ±30°, rejection-sampled: no overlaps, no object near a target |
-| Table material | 3 materials swapped per episode (checker, wood, grey) |
+| Object and plate placement | ±4 cm, ±30° yaw; rejection-sampled with no overlaps, nothing on a target or the relay |
+| Object weight and friction | ±20% |
+| Table / background | 3 table materials (checker, wood, grey) |
 | Object colors | ±0.15 RGB |
-| Lights | position ±0.3 m, diffuse ±30%, shadows on 80% of episodes |
-| Front camera | position ±2 cm, look-at ±4 cm, fovy ±5° |
-| Physics | mass and friction ±20% |
+| Lighting | position ±0.3 m, intensity ±30%, shadows on in 80% of episodes |
+| Front camera | position ±2 cm, look-at ±4 cm, field of view ±5° |
+
+Evaluation seeds (≥ 10000) never overlap collection seeds.
+
+## OpenVINO optimization and Intel hardware mapping
+
+| Stage | Component | Intel target | Precision |
+|---|---|---|---|
+| Policy inference (deployment) | ACT → OpenVINO IR | CPU (P-cores) | f32, parity-checked against PyTorch to within 1e-3 rad |
+| Policy inference (fast path) | ACT → OpenVINO IR | Arc iGPU (`GPU`) | f16 (device default) |
+| Policy inference (low power) | ACT → OpenVINO IR | NPU | f16 |
+| Model compression | ACT INT8 IR (NNCF) | CPU / GPU / NPU | INT8; closed-loop success is compared against f32 |
+| VLA inference | SmolVLA (PyTorch) | Arc iGPU via PyTorch XPU (`--device xpu`), or CPU | f32 |
+| Simulation + rendering | MuJoCo + EGL | CPU + iGPU | — |
+
+- **Parity is checked end to end.** The full PyTorch pipeline (processors + policy) is compared against processors + IR, so double or missing normalization would show up.
+- **CPU precision is pinned to f32.** OpenVINO's CPU default on some platforms (f16 on ARM, bf16 on AMX Xeons) alone breaks the 1e-3 parity.
+- **Task quality is preserved by measurement:** `scripts.eval --backend openvino` runs closed-loop episodes on each device and precision, so the success-rate change is measured, not assumed.
+
+SmolVLA's flow-matching action expert isn't exportable through `optimum`. `export_openvino.py --smolvla-ckpt` documents the attempt and exports the vision encoder.
 
 ## Quickstart
 
 ```bash
-uv sync                                      # Python 3.12, pinned lerobot==0.6.1 (uv.lock)
-uv run python -m dinner.env                  # scene/env self-check (asserts)
-uv run python -m dinner.expert --seeds 20    # expert success per task
+uv sync                                        # Python 3.12, pinned lerobot==0.6.1 (uv.lock)
+uv run python -m dinner.env                    # scene/env self-check (asserts)
+uv run python -m dinner.expert --seeds 10      # expert success per task
 ```
 
-**1. Collect demonstrations** (~1.5 h on an M4, ~200 episodes):
+**1. Collect** (50 episodes per task, all six tasks):
 ```bash
 uv run python -m scripts.collect --episodes-per-task 50
 ```
 
-**2. Train** (Apple Silicon shown; use `--policy.device=cuda` on NVIDIA):
+**2. Train** (Apple Silicon shown; `--policy.device=cuda` on NVIDIA, `xpu` on Intel Arc):
 ```bash
-# ACT baseline: ~1.3 steps/s on an M4, 8k steps in ~1.7 h
 PYTORCH_ENABLE_MPS_FALLBACK=1 uv run lerobot-train --policy.type=act --policy.device=mps --policy.push_to_hub=false \
   --dataset.repo_id=local/dinner_set_table --dataset.root=data/dinner_set_table \
   --batch_size=8 --steps=8000 --save_freq=2000 --output_dir=outputs/train/act_dinner --wandb.enable=false
 
-# SmolVLA: ~7.2 s/step on an M4, 7k steps (~1.3 epochs of ~42k frames) in ~14 h.
-# smolvla_base names its cameras camera1..3, so dataset cameras are renamed onto them.
 PYTORCH_ENABLE_MPS_FALLBACK=1 uv run lerobot-train --policy.path=lerobot/smolvla_base --policy.device=mps --policy.push_to_hub=false \
   --dataset.repo_id=local/dinner_table --dataset.root=data/dinner_table \
   --rename_map='{"observation.images.front": "observation.images.camera1", "observation.images.left_wrist": "observation.images.camera2", "observation.images.right_wrist": "observation.images.camera3"}' \
-  --batch_size=8 --steps=7000 --policy.scheduler_decay_steps=7000 --save_freq=1000 \
+  --batch_size=8 --steps=5500 --policy.scheduler_decay_steps=5500 --save_freq=1000 \
   --output_dir=outputs/train/smolvla_dinner --wandb.enable=false
 ```
-On a CUDA GPU, use `--steps=20000` (the SmolVLA docs default) and leave the scheduler at its default.
 
-**3. Closed-loop evaluation** (held-out seeds ≥ 10000):
+**3. Closed-loop evaluation** (10 held-out randomized seeds per task; videos end with a SUCCESS/FAIL banner):
 ```bash
 CKPT=outputs/train/smolvla_dinner/checkpoints/last/pretrained_model
-uv run python -m scripts.eval --policy smolvla --ckpt $CKPT --video
-uv run python -m scripts.eval --policy smolvla --ckpt $CKPT --paraphrases eval   # unseen instruction wording
-uv run python -m scripts.eval --policy smolvla --ckpt $CKPT --rand heavy         # 1.5x randomization
-uv run python -m scripts.eval --policy act --ckpt outputs/train/act_dinner/checkpoints/last/pretrained_model
-uv run mjpython -m scripts.eval --policy smolvla --ckpt $CKPT --viewer           # live viewer (macOS)
+uv run python -m scripts.eval --policy smolvla --ckpt $CKPT --episodes 10 --video --video-episodes 10
+uv run python -m scripts.eval --policy smolvla --ckpt $CKPT --episodes 10 --paraphrases eval   # unseen wording
+uv run python -m scripts.eval --policy smolvla --ckpt $CKPT --episodes 10 --rand heavy         # 1.5x randomization
+uv run python -m scripts.make_reel results/videos/smolvla_torch_nominal_train_set_table_ep*.mp4 --out results/videos/reel_set_table.mp4
+uv run mjpython -m scripts.eval --policy smolvla --ckpt $CKPT --viewer                          # live viewer (macOS)
 ```
 
-**4. OpenVINO export and Intel benchmark:**
+**4. OpenVINO export, benchmark and closed-loop on the IR:**
 ```bash
 ACT=outputs/train/act_dinner/checkpoints/last/pretrained_model
-uv run python -m scripts.export_openvino --act-ckpt $ACT       # IR + end-to-end parity check (f32)
-uv run python -m scripts.bench_intel --ckpt $ACT               # torch vs OpenVINO on every device found
-uv run python -m scripts.eval --policy act --ckpt $ACT --backend openvino --ov-device GPU   # CPU | GPU | NPU
+uv run python -m scripts.export_openvino --act-ckpt $ACT     # f32 IR + parity, INT8 IR
+uv run python -m scripts.bench_intel --ckpt $ACT             # latency, throughput, device, precision
+uv run python -m scripts.eval --policy act --ckpt $ACT --backend openvino --ov-device GPU --episodes 10
+uv run python -m scripts.eval --policy act --ckpt $ACT --backend openvino --ir results/act_dinner_int8.xml --episodes 10
 ```
 
 ### Reproducing on Intel hardware (one command)
 
-On an Intel system, e.g. the hackathon Core Ultra box (Ubuntu 24.04, Arc iGPU + NPU):
+On an Intel Core Ultra system (Ubuntu 24.04, Arc iGPU + NPU):
 ```bash
 bash scripts/intel_quickstart.sh <act pretrained_model dir or HF repo id>
 ```
-The script runs the whole Intel path in one go:
-- installs `uv` if missing
-- builds the exact environment from `uv.lock` (Python 3.12)
+In one run the script:
+- builds the exact locked environment (Python 3.12)
 - runs the sim self-check
-- exports ACT to OpenVINO with the parity check
+- exports ACT (f32 with the parity check, plus INT8)
 - benchmarks torch vs OpenVINO on CPU, GPU and NPU
-- runs closed-loop MuJoCo episodes on the IR on each device
+- runs closed-loop MuJoCo episodes on the IR for each device
 
-The lockfile has been verified to install on Linux x86_64 (all 125 packages have wheels). The Intel numbers in the results table come from running this script on Intel hardware. The development machine is Apple Silicon, where `bench_intel.py` marks its output `intel: false`.
+`uv.lock` has been verified to install on Linux x86_64 (all packages have wheels). Intel numbers come only from running this on Intel hardware. The development machine is Apple Silicon, where `bench_intel.py` marks its output `intel: false`.
 
-**5. Docker** (CPU, headless). Either mount a checkpoint or pass an HF Hub repo id as `--ckpt`:
+**Docker** (CPU, headless):
 ```bash
 docker build -t dinner-vla .
 docker run --rm -v $PWD/outputs/train/smolvla_dinner/checkpoints/last/pretrained_model:/app/ckpt:ro \
@@ -124,32 +177,48 @@ docker run --rm -v $PWD/outputs/train/smolvla_dinner/checkpoints/last/pretrained
 
 ## Results
 
-_Pending: generated from `results/*.json`._
+_Pending: filled from `results/*.json`._ All runs use held-out seeds, 10 episodes per task.
 
-| Policy | Randomization | Instructions | fork_left | spoon_right | cup_tr | set_table | p50 inference |
-|---|---|---|---|---|---|---|---|
-| SmolVLA | nominal | train | | | | | |
-| SmolVLA | nominal | held-out | | | | | |
-| SmolVLA | heavy | train | | | | | |
-| ACT | nominal | — | n/a | n/a | n/a | | |
-| ACT (OpenVINO, Intel CPU) | — | — | | | | | |
+| Policy | Backend | Randomization | Instructions | fork_left | spoon_right | cup_tr | set_table | handoff_fork | full_setting |
+|---|---|---|---|---|---|---|---|---|---|
+| Expert (upper bound) | — | nominal | — | 10/10 | 10/10 | 10/10 | 10/10 | 10/10 | 10/10 |
+| SmolVLA | torch | nominal | train | | | | | | |
+| SmolVLA | torch | nominal | held-out | | | | | | |
+| SmolVLA | torch | heavy | train | | | | | | |
+| ACT | torch | nominal | — | n/a | n/a | n/a | | n/a | n/a |
+| ACT | OpenVINO f32 | nominal | — | n/a | n/a | n/a | | n/a | n/a |
+| ACT | OpenVINO INT8 | nominal | — | n/a | n/a | n/a | | n/a | n/a |
+
+## Rubric mapping
+
+| Criterion | Where to look |
+|---|---|
+| End-to-end task + bimanual (30) | 6 tasks including simultaneous, hand-off and multi-step (`dinner/env.py`, `dinner/expert.py`); results table; reels |
+| VLA / multi-modal reasoning (20) | SmolVLA conditioned on language + 3 cameras; held-out instruction row; `full_setting` multi-step context |
+| Robustness (15) | Randomization table; nominal vs heavy rows; 10 held-out seeds per task |
+| OpenVINO + Core Ultra (20) | `export_openvino.py` (parity, INT8), `bench_intel.py` (latency, throughput, device, precision), `eval.py --backend openvino` (task success on the IR), `intel_quickstart.sh` |
+| Quality + reproducibility (10) | `uv.lock`, self-checks, one-command Intel script, Dockerfile, deterministic seeds |
+| Innovation (5) | Phase-wise closed-loop bimanual planner; end-to-end processor parity check; closed-loop INT8 quality check |
 
 ## Limitations
 
-- **The plate is not grasped.** It's a randomized reference object; a thin disc isn't graspable by the SO-101 jaw in this time frame.
-- **Dual-arm planning is sequential.** Each arm is planned with the other held at its start pose, then both run at once. Arm–arm conflicts are caught by the rollout success filter, not by joint planning.
-- **Carried objects aren't collision-checked.** OMPL checks the arm but not the object it holds; transit height and the success filter cover this.
-- **ACT has no language input,** so it's trained and evaluated on `set_table` only.
+- **The plate isn't grasped.** It's a randomized reference object; a thin disc isn't graspable by the SO-101 jaw.
+- **The hand-off goes through a relay pad, not in the air.**
+- **ACT has no language input,** so it covers `set_table` only; SmolVLA covers all tasks.
+- **SmolVLA isn't OpenVINO-exported end to end;** its Intel path is PyTorch XPU/CPU.
+- **The shipped SmolVLA dataset was assembled from two collection passes.** Single-arm and `set_table` episodes predate the phase planner; `cup_tr`, `handoff_fork` and `full_setting` were recollected with the final layout. `scripts.collect` reproduces all six tasks in one pass.
 
 ## Repo layout
 
 ```
-sim/scene.xml            scene: table, objects, cameras, lights, 2x <attach> SO-101
-sim/so101/               MuJoCo Menagerie robotstudio_so101 @ 8161bba (Apache-2.0)
-dinner/env.py            env, tasks + paraphrases, randomization, success
-dinner/expert.py         mink IK + OMPL expert, rollout()
-scripts/collect.py       expert -> LeRobot datasets
-scripts/eval.py          closed-loop eval (torch / OpenVINO), metrics JSON, videos
-scripts/export_openvino.py   ACT -> ONNX -> IR with parity check; SmolVLA attempt
-scripts/bench_intel.py   OpenVINO vs torch CPU latency
+sim/scene.xml              scene: table, objects, relay, cameras, lights, 2x <attach> SO-101
+sim/so101/                 MuJoCo Menagerie robotstudio_so101 @ 8161bba (Apache-2.0)
+dinner/env.py              env, tasks + phases + paraphrases, randomization, success
+dinner/expert.py           mink IK + OMPL expert, phase-wise bimanual planning, rollout()
+scripts/collect.py         expert -> LeRobot datasets
+scripts/eval.py            closed-loop eval (torch / OpenVINO CPU|GPU|NPU), metrics JSON, videos
+scripts/make_reel.py       tile episode videos into a 10-seed grid
+scripts/export_openvino.py ACT -> ONNX -> IR (f32 parity) + INT8; SmolVLA attempt
+scripts/bench_intel.py     latency / throughput per device and precision
+scripts/intel_quickstart.sh one-command reproduction on Intel hardware
 ```

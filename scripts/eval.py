@@ -61,19 +61,27 @@ class OpenVINOACT:
         return self.queue.pop(0)
 
 
-def overlay(obs, text, p50_ms, t):
+def _text(frame, s, org, scale=0.6, color=(255, 255, 255)):
+    cv2.putText(frame, s, org, cv2.FONT_HERSHEY_SIMPLEX, scale, (0, 0, 0), 4)
+    cv2.putText(frame, s, org, cv2.FONT_HERSHEY_SIMPLEX, scale, color, 2)
+
+
+def overlay(obs, text, p50_ms, t, seed, level, banner=None):
+    """Front + both wrist cameras, with the command, latency, seed and (at the end) the outcome."""
     frame = np.hstack([obs[f"observation.images.{k}"] for k in CAMERAS])
     frame = cv2.resize(frame, None, fx=2, fy=2, interpolation=cv2.INTER_NEAREST)
-    label = f"{text} | p50 {p50_ms:.0f} ms | t={t:.1f}s"
-    cv2.putText(frame, label, (10, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 4)
-    cv2.putText(frame, label, (10, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+    _text(frame, f"{text} | p50 {p50_ms:.0f} ms | t={t:.1f}s", (10, 24))
+    _text(frame, f"seed {seed} | randomization: {level}", (10, 50))
+    if banner is not None:
+        ok = banner.startswith("SUCCESS")
+        _text(frame, banner, (10, frame.shape[0] - 24), 1.4, (80, 220, 80) if ok else (80, 80, 240))
     return frame
 
 
 def run_episode(env, policy, pre, post, task, text, seed, level, infer_every, writer=None, viewer=None):
     obs = env.reset(seed, level, task)
     policy.reset()
-    lat = []
+    lat, ok, t_done = [], False, None
     for step in range(int(TASKS[task].get("timeout_s", TIMEOUT_S) * FPS)):
         batch = pre(to_batch(obs, text))
         tic = time.perf_counter()
@@ -81,6 +89,8 @@ def run_episode(env, policy, pre, post, task, text, seed, level, infer_every, wr
             action = policy.select_action(batch)
         if action.device.type == "mps":
             torch.mps.synchronize()
+        elif action.device.type == "xpu":  # Intel Arc iGPU via PyTorch XPU
+            torch.xpu.synchronize()
         lat.append(time.perf_counter() - tic)
         action = post(action)
         env.step(action.squeeze(0).cpu().numpy())
@@ -88,11 +98,17 @@ def run_episode(env, policy, pre, post, task, text, seed, level, infer_every, wr
         if viewer is not None:
             viewer.sync()
         if writer is not None:
-            infer = lat[::infer_every]
-            writer.append_data(overlay(obs, text, 1000 * float(np.median(infer)), (step + 1) / FPS))
+            writer.append_data(overlay(obs, text, 1000 * float(np.median(lat[::infer_every])), (step + 1) / FPS,
+                                       seed, level))
         if env.success(task):
-            return True, (step + 1) / FPS, lat
-    return False, None, lat
+            ok, t_done = True, (step + 1) / FPS
+            break
+    if writer is not None:  # hold the final state for a second with the outcome
+        banner = f"SUCCESS in {t_done:.1f}s" if ok else "FAIL (timeout)"
+        final = overlay(obs, text, 1000 * float(np.median(lat[::infer_every])), (step + 1) / FPS, seed, level, banner)
+        for _ in range(FPS):
+            writer.append_data(final)
+    return ok, t_done, lat
 
 
 def main():
@@ -133,7 +149,8 @@ def main():
 
         viewer = mujoco.viewer.launch_passive(env.model, env.data)
 
-    backend = args.backend if args.backend == "torch" else f"openvino-{args.ov_device.lower()}"
+    backend = args.backend if args.backend == "torch" else \
+        f"openvino-{args.ov_device.lower()}" + ("-int8" if "int8" in Path(args.ir).stem else "")
     tag = f"{args.policy}_{backend}_{args.rand}_{args.paraphrases}"
     out = Path(args.out)
     (out / "videos").mkdir(parents=True, exist_ok=True)

@@ -1,9 +1,9 @@
-"""ACT latency: OpenVINO IR on CPU vs PyTorch on CPU, same machine.
+"""ACT latency and throughput: PyTorch CPU vs OpenVINO (f32 and INT8 IRs) on every OpenVINO device found.
 
-Run this on x86 Intel hardware (Intel Developer Cloud, a borrowed PC, or hackathon nodes) for Intel claims;
-elsewhere it still runs but the report marks intel=false.
+Run this on Intel Core Ultra hardware (CPU / Arc iGPU / NPU) for Intel claims; elsewhere it still runs but the
+report marks intel=false.
 
-    python scripts/bench_intel.py --ckpt <act pretrained_model> --ir results/act_dinner.xml
+    python -m scripts.bench_intel --ckpt <act pretrained_model>
 """
 
 import argparse
@@ -11,6 +11,7 @@ import json
 import platform
 import subprocess
 import time
+from pathlib import Path
 
 import numpy as np
 import openvino as ov
@@ -34,13 +35,16 @@ def bench(fn, warmup=10, n=100):
         tic = time.perf_counter()
         fn()
         t.append(time.perf_counter() - tic)
-    return {"p50_ms": 1000 * float(np.median(t)), "p95_ms": 1000 * float(np.percentile(t, 95)), "n": n}
+    # One action-chunk inference per call; at 30 Hz control with n_action_steps=100 a chunk covers 3.3 s.
+    return {"p50_ms": 1000 * float(np.median(t)), "p95_ms": 1000 * float(np.percentile(t, 95)),
+            "throughput_inferences_per_s": n / float(np.sum(t)), "n": n}
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ckpt", required=True)
     ap.add_argument("--ir", default="results/act_dinner.xml")
+    ap.add_argument("--ir-int8", default="results/act_dinner_int8.xml")
     ap.add_argument("--out", default="results/intel_bench.json")
     args = ap.parse_args()
 
@@ -58,11 +62,18 @@ def main():
 
     core = ov.Core()
     cpu_default = core.get_property("CPU", "INFERENCE_PRECISION_HINT").get_type_name()  # f32 x86, f16 ARM, bf16 AMX
-    # CPU at f32 matches torch numerically (parity-checked); device defaults are faster but approximate.
-    configs = {"cpu_f32": ("CPU", {"INFERENCE_PRECISION_HINT": "f32"}), f"cpu_{cpu_default}": ("CPU", {})}
-    for dev in core.available_devices:  # Intel Core Ultra: GPU (Arc iGPU) and NPU, at their default precision
+    # (name, IR, device, config). CPU f32 matches torch numerically (parity-checked); other rows trade exactness
+    # for speed: device-default precision (f16/bf16), INT8 weights+activations, Arc iGPU, NPU.
+    configs = [("cpu_f32", args.ir, "CPU", {"INFERENCE_PRECISION_HINT": "f32"}),
+               (f"cpu_{cpu_default}", args.ir, "CPU", {})]
+    for dev in core.available_devices:
         if dev.startswith(("GPU", "NPU")):
-            configs[dev.lower().replace(".", "")] = (dev, {})
+            configs.append((dev.lower().replace(".", ""), args.ir, dev, {}))
+    if Path(args.ir_int8).exists():
+        configs.append(("cpu_int8", args.ir_int8, "CPU", {}))
+        for dev in core.available_devices:
+            if dev.startswith(("GPU", "NPU")):
+                configs.append((dev.lower().replace(".", "") + "_int8", args.ir_int8, dev, {}))
 
     cpu = cpu_model()
     report = {
@@ -72,13 +83,14 @@ def main():
                     "openvino_devices": {d: core.get_property(d, "FULL_DEVICE_NAME") for d in core.available_devices}},
         "act_torch_cpu": bench(torch_fn),
     }
-    for name, (dev, cfg) in configs.items():
+    for name, ir, dev, cfg in configs:
         try:
-            c = core.compile_model(args.ir, dev, {"PERFORMANCE_HINT": "LATENCY", **cfg})
+            c = core.compile_model(ir, dev, {"PERFORMANCE_HINT": "LATENCY", **cfg})
             report[f"act_openvino_{name}"] = bench(lambda c=c: c(np_inputs))
         except Exception as e:  # one device failing to compile this graph shouldn't sink the whole report
             report[f"act_openvino_{name}"] = {"error": str(e)[:300]}
-    report["speedup_p50_cpu_f32"] = report["act_torch_cpu"]["p50_ms"] / report["act_openvino_cpu_f32"]["p50_ms"]
+    report["speedup_p50_vs_torch"] = {k.removeprefix("act_openvino_"): report["act_torch_cpu"]["p50_ms"] / v["p50_ms"]
+                                      for k, v in report.items() if k.startswith("act_openvino_") and "p50_ms" in v}
     if not report["machine"]["intel"]:
         print(f"WARNING: CPU is {cpu!r}, not Intel; do not report these numbers as Intel results.")
     with open(args.out, "w") as f:

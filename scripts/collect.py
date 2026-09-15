@@ -88,9 +88,11 @@ def main():
                     ds.add_frame(dict(frame))  # add_frame pops "task"; each dataset needs its own dict
                     if ds_act is not None and task == "set_table":
                         ds_act.add_frame(dict(frame))
-                ds.save_episode()
+                # Serial encoding: parallel encoding spawns a process pool per episode, and with several
+                # collectors plus training on 16 GB a pool worker got killed mid-encode (BrokenProcessPool).
+                ds.save_episode(parallel_encoding=False)
                 if ds_act is not None and task == "set_table":
-                    ds_act.save_episode()
+                    ds_act.save_episode(parallel_encoding=False)
                 counts[task] += 1
                 done = sum(counts.values())
                 elapsed = time.monotonic() - t0
