@@ -185,9 +185,16 @@ _Pending: filled from `results/*.json`._ All runs use held-out seeds, 10 episode
 | SmolVLA | torch | nominal | train | | | | | | |
 | SmolVLA | torch | nominal | held-out | | | | | | |
 | SmolVLA | torch | heavy | train | | | | | | |
-| ACT | torch | nominal | — | n/a | n/a | n/a | | n/a | n/a |
-| ACT | OpenVINO f32 | nominal | — | n/a | n/a | n/a | | n/a | n/a |
-| ACT | OpenVINO INT8 | nominal | — | n/a | n/a | n/a | | n/a | n/a |
+| ACT | torch | nominal | — | n/a | n/a | n/a | 0/10 (spoon 5, fork 0) | n/a | n/a |
+| ACT | OpenVINO f32 | nominal | — | n/a | n/a | n/a | 1/10 (spoon 5, fork 1) | n/a | n/a |
+| ACT | OpenVINO INT8 | nominal | — | n/a | n/a | n/a | 1/10 (spoon 4, fork 1) | n/a | n/a |
+| ACT | torch | heavy | — | n/a | n/a | n/a | 0/10 (spoon 1, fork 0) | n/a | n/a |
+
+**ACT findings:**
+- **Behaviour.** ACT learned the simultaneous dual-arm sequence (both arms reach, grasp, carry, place, return). The right-arm spoon placement succeeds in half the seeds, but the left-arm fork grasp misses by 3–5 cm and closes early. Temporal ensembling (0/3) and an earlier checkpoint (0/3) didn't fix it.
+- **OpenVINO preserves behaviour.** Across torch, f32 and INT8, the per-object placement counts match within one episode (spoon 5 / 5 / 4).
+- **Latency.** p50 per action chunk on the development CPU: torch 131 ms, OpenVINO f32 119 ms, OpenVINO INT8 **50 ms** (2.6×). That's an Apple M4, measured while SmolVLA trained on the same machine; Intel numbers come from `scripts/intel_quickstart.sh`.
+- **Export.** f32 parity with PyTorch is 4.8e-4 rad. The INT8 model (weights and activations, NNCF with 300 calibration scenes) is 66 MB → 34 MB, with a maximum action difference of 0.016 rad from f32.
 
 ## Rubric mapping
 
