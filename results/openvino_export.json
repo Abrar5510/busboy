@@ -20,5 +20,33 @@
         "int8": 33.551282
       }
     }
+  },
+  "smolvla": {
+    "ir": "results/smolvla_dinner.xml",
+    "inputs": [
+      "state",
+      "lang_tokens",
+      "lang_mask",
+      "noise",
+      "img_camera1",
+      "img_camera2",
+      "img_camera3"
+    ],
+    "num_steps": 10,
+    "chunk_size": 50,
+    "parity_max_abs_err": 0.00032489001750946045,
+    "parity_max_abs_err_normalized_chunk": 0.002343416213989258,
+    "parity_tol": 0.001,
+    "parity_pass": true,
+    "reference": "PyTorch f32",
+    "int8": {
+      "ir": "results/smolvla_dinner_int8.xml",
+      "mode": "weight-only INT8 (NNCF compress_weights, int8_asym)",
+      "max_abs_action_err_vs_f32_rad": 0.004451453685760498,
+      "size_mb": {
+        "int8": 394.805288,
+        "ir_fp16_weights": 786.998334
+      }
+    }
   }
 }

@@ -1,0 +1,4347 @@
+{
+  "policy": "agent (LLM planner + perception + mink/OMPL skills)",
+  "planner_model": "qwen3-1.7b-int4-ov",
+  "planner_device": "CPU",
+  "rand": "nominal",
+  "paraphrases": "train",
+  "disturb": true,
+  "preplaced": false,
+  "tasks": {
+    "fork_left": {
+      "successes": 10,
+      "episodes": 10,
+      "success_rate": 1.0
+    },
+    "spoon_right": {
+      "successes": 10,
+      "episodes": 10,
+      "success_rate": 1.0
+    },
+    "cup_tr": {
+      "successes": 8,
+      "episodes": 10,
+      "success_rate": 0.8
+    },
+    "set_table": {
+      "successes": 9,
+      "episodes": 10,
+      "success_rate": 0.9
+    },
+    "handoff_fork": {
+      "successes": 10,
+      "episodes": 10,
+      "success_rate": 1.0
+    },
+    "full_setting": {
+      "successes": 9,
+      "episodes": 10,
+      "success_rate": 0.9
+    }
+  },
+  "planner_latency_s_uncached": [],
+  "episode_wall_s_mean": 5.016054302782868,
+  "machine": {
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "episodes": {
+    "fork_left": [
+      {
+        "seed": 10000,
+        "command": "Set the fork on the left side of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "critic: The command does not ask to move the spoon, but your plan does."
+          ],
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.57,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.9,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 15.49999999999928,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 10001,
+        "command": "Put the fork down to the plate's left.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "critic: The command asks to move the fork, but your plan does not."
+          ],
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.57,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.9,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 15.366666666665955,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 10002,
+        "command": "Put the fork down to the plate's left.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "critic: The command asks to move the fork, but your plan does not."
+          ],
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.47,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.8,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 15.099999999999303,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 10003,
+        "command": "Place the fork to the left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.67,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            8.0,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 15.099999999999303,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 10004,
+        "command": "Place the fork to the left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.97,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.3,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.33333333333268,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 10005,
+        "command": "Place the fork to the left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.27,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.6,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.966666666665978,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 10006,
+        "command": "Place the fork to the left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.43,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.77,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.699999999999326,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 10007,
+        "command": "Place the fork to the left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.93,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.27,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.33333333333268,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 10008,
+        "command": "Place the fork to the left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.67,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            8.0,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 15.666666666665938,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 10009,
+        "command": "Set the fork on the left side of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "critic: The command does not ask to move the spoon, but your plan does."
+          ],
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.67,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            8.0,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 15.766666666665932,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      }
+    ],
+    "spoon_right": [
+      {
+        "seed": 11000,
+        "command": "Put the spoon down to the plate's right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.97,
+            "DISTURBANCE: spoon pushed off its target"
+          ],
+          [
+            7.3,
+            "camera: spoon not at right of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.233333333332686,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 11001,
+        "command": "Set the spoon on the right side of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.07,
+            "DISTURBANCE: spoon pushed off its target"
+          ],
+          [
+            7.4,
+            "camera: spoon not at right of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.566666666666,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 11002,
+        "command": "Put the spoon down to the plate's right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.8,
+            "DISTURBANCE: spoon pushed off its target"
+          ],
+          [
+            7.13,
+            "camera: spoon not at right of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.299999999999349,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 11003,
+        "command": "Put the spoon down to the plate's right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.4,
+            "DISTURBANCE: spoon pushed off its target"
+          ],
+          [
+            7.73,
+            "camera: spoon not at right of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 15.199999999999298,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 11004,
+        "command": "Set the spoon on the right side of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.87,
+            "DISTURBANCE: spoon pushed off its target"
+          ],
+          [
+            7.2,
+            "camera: spoon not at right of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 13.966666666666034,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 11005,
+        "command": "Set the spoon on the right side of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.17,
+            "DISTURBANCE: spoon pushed off its target"
+          ],
+          [
+            7.5,
+            "camera: spoon not at right of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.666666666665995,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 11006,
+        "command": "Put the spoon down to the plate's right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.97,
+            "DISTURBANCE: spoon pushed off its target"
+          ],
+          [
+            7.3,
+            "camera: spoon not at right of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.266666666666017,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 11007,
+        "command": "Put the spoon down to the plate's right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.23,
+            "DISTURBANCE: spoon pushed off its target"
+          ],
+          [
+            7.57,
+            "camera: spoon not at right of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.733333333332657,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 11008,
+        "command": "Put the spoon down to the plate's right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.13,
+            "DISTURBANCE: spoon pushed off its target"
+          ],
+          [
+            7.47,
+            "camera: spoon not at right of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.366666666666012,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 11009,
+        "command": "Set the spoon on the right side of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            7.23,
+            "DISTURBANCE: spoon pushed off its target"
+          ],
+          [
+            7.57,
+            "camera: spoon not at right of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.633333333332663,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      }
+    ],
+    "cup_tr": [
+      {
+        "seed": 12000,
+        "command": "Put the cup at the top right of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.93,
+            "DISTURBANCE: cup pushed off its target"
+          ],
+          [
+            7.27,
+            "camera: cup not at top right; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.199999999999354,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 12001,
+        "command": "Set the cup at the plate's upper right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.47,
+            "DISTURBANCE: cup pushed off its target"
+          ],
+          [
+            6.8,
+            "camera: cup not at top right; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 13.066666666666086,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 12002,
+        "command": "Set the cup at the plate's upper right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.57,
+            "DISTURBANCE: cup pushed off its target"
+          ],
+          [
+            6.9,
+            "camera: cup not at top right; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 13.466666666666063,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 12003,
+        "command": "Put the cup at the top right of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.47,
+            "DISTURBANCE: cup pushed off its target"
+          ],
+          [
+            6.8,
+            "camera: cup not at top right; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 13.233333333332743,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 12004,
+        "command": "Place the cup above and to the right of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.87,
+            "DISTURBANCE: cup pushed off its target"
+          ],
+          [
+            7.2,
+            "camera: cup not at top right; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 13.933333333332703,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 12005,
+        "command": "Set the cup at the plate's upper right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.9,
+            "DISTURBANCE: cup pushed off its target"
+          ],
+          [
+            7.23,
+            "camera: cup not at top right; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.133333333332692,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 12006,
+        "command": "Place the cup above and to the right of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.93,
+            "DISTURBANCE: cup pushed off its target"
+          ],
+          [
+            7.27,
+            "camera: cup not at top right; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.233333333332686,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 12007,
+        "command": "Put the cup at the top right of the plate.",
+        "preplaced": null,
+        "success": false,
+        "placed": {
+          "cup": false
+        },
+        "executed": [],
+        "goals": [
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.6,
+            "DISTURBANCE: cup pushed off its target"
+          ],
+          [
+            6.93,
+            "camera: cup not at top right; re-planning from its new pose"
+          ],
+          [
+            12.87,
+            "camera: cup not at top right; re-planning from its new pose"
+          ],
+          [
+            12.87,
+            "camera: cup not visible; can't plan it"
+          ]
+        ],
+        "sim_time_s": 13.366666666666069,
+        "planner_latency_s": null,
+        "plan_success": false,
+        "extra_objects": []
+      },
+      {
+        "seed": 12008,
+        "command": "Set the cup at the plate's upper right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            6.73,
+            "DISTURBANCE: cup pushed off its target"
+          ],
+          [
+            7.07,
+            "camera: cup not at top right; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 13.733333333332714,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 12009,
+        "command": "Set the cup at the plate's upper right.",
+        "preplaced": null,
+        "success": false,
+        "placed": {
+          "cup": false
+        },
+        "executed": [],
+        "goals": [
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 1 steps, 1 phases (cached)"
+          ],
+          [
+            0.5,
+            "cannot plan cup with right arm (cup->cup_target: no collision-free IK chain); repairing"
+          ],
+          [
+            0.5,
+            "no feasible repair for cup"
+          ]
+        ],
+        "sim_time_s": 0.9999999999999971,
+        "planner_latency_s": null,
+        "plan_success": false,
+        "extra_objects": []
+      }
+    ],
+    "set_table": [
+      {
+        "seed": 13000,
+        "command": "Lay out the fork and spoon around the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 1 phases (cached)"
+          ],
+          [
+            7.83,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            8.17,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 15.366666666665955,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13001,
+        "command": "Set the table.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 1 phases (cached)"
+          ],
+          [
+            7.1,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.43,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.666666666665995,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13002,
+        "command": "Set the table.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 1 phases (cached)"
+          ],
+          [
+            6.9,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.23,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 13.933333333332703,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13003,
+        "command": "Lay out the fork and spoon around the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 1 phases (cached)"
+          ],
+          [
+            7.03,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.37,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.399999999999343,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13004,
+        "command": "Set the table.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 1 phases (cached)"
+          ],
+          [
+            7.13,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.47,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.399999999999343,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13005,
+        "command": "Set the table for dinner.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 1 phases (cached)"
+          ],
+          [
+            7.83,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            8.17,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 16.09999999999933,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13006,
+        "command": "Set the table.",
+        "preplaced": null,
+        "success": false,
+        "placed": {
+          "fork": false,
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 1 phases (cached)"
+          ],
+          [
+            0.5,
+            "parallel plan failed (fork->fork_target: no collision-free IK chain); running sequentially"
+          ],
+          [
+            0.5,
+            "cannot plan fork with left arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            0.5,
+            "no feasible repair for fork"
+          ],
+          [
+            7.4,
+            "DISTURBANCE: spoon pushed off its target"
+          ],
+          [
+            7.73,
+            "camera: spoon not at right of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 15.03333333333264,
+        "planner_latency_s": null,
+        "plan_success": false,
+        "extra_objects": []
+      },
+      {
+        "seed": 13007,
+        "command": "Set the table.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 1 phases (cached)"
+          ],
+          [
+            7.17,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.5,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 15.366666666665955,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13008,
+        "command": "Set the table for dinner.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 1 phases (cached)"
+          ],
+          [
+            7.17,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.5,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 14.433333333332675,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13009,
+        "command": "Set the table for dinner.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 1 phases (cached)"
+          ],
+          [
+            7.4,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.73,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 15.099999999999303,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      }
+    ],
+    "handoff_fork": [
+      {
+        "seed": 14000,
+        "command": "Pass the fork over to the left arm, then set it to the left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "fork",
+            "target": "handoff_pad"
+          },
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "fork",
+              "relay"
+            ]
+          },
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 2 phases (cached)"
+          ],
+          [
+            14.57,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            14.9,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ],
+          [
+            14.9,
+            "cannot plan fork with left arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            14.9,
+            "repair: B(right): fork -> hand-off pad then A(left): fork -> left of plate"
+          ]
+        ],
+        "sim_time_s": 28.533333333342558,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 14001,
+        "command": "Hand the fork from the right arm to the left arm and place it left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "handoff_pad"
+          },
+          {
+            "arm": "right",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "relay"
+            ]
+          },
+          {
+            "right": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 2 phases (cached)"
+          ],
+          [
+            0.5,
+            "cannot plan fork with left arm (fork->relay: no collision-free IK chain); repairing"
+          ],
+          [
+            0.5,
+            "repair: B(right): fork -> hand-off pad"
+          ],
+          [
+            8.53,
+            "cannot plan fork with right arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            8.53,
+            "repair: A(left): fork -> left of plate"
+          ],
+          [
+            15.07,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            15.4,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ],
+          [
+            15.4,
+            "cannot plan fork with left arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            15.4,
+            "repair: B(right): fork -> hand-off pad then A(left): fork -> left of plate"
+          ]
+        ],
+        "sim_time_s": 31.200000000011347,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 14002,
+        "command": "Hand the fork from the right arm to the left arm and place it left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "handoff_pad"
+          },
+          {
+            "arm": "right",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "relay"
+            ]
+          },
+          {
+            "right": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 2 phases (cached)"
+          ],
+          [
+            0.5,
+            "cannot plan fork with left arm (fork->relay: no collision-free IK chain); repairing"
+          ],
+          [
+            0.5,
+            "repair: B(right): fork -> hand-off pad"
+          ],
+          [
+            8.4,
+            "cannot plan fork with right arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            8.4,
+            "repair: A(left): fork -> left of plate"
+          ],
+          [
+            15.33,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            15.67,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ],
+          [
+            15.67,
+            "cannot plan fork with left arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            15.67,
+            "repair: B(right): fork -> hand-off pad then A(left): fork -> left of plate"
+          ]
+        ],
+        "sim_time_s": 31.733333333345104,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 14003,
+        "command": "Hand the fork from the right arm to the left arm and place it left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "handoff_pad"
+          },
+          {
+            "arm": "right",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "relay"
+            ]
+          },
+          {
+            "right": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 2 phases (cached)"
+          ],
+          [
+            0.5,
+            "cannot plan fork with left arm (fork->relay: no collision-free IK chain); repairing"
+          ],
+          [
+            0.5,
+            "repair: B(right): fork -> hand-off pad"
+          ],
+          [
+            8.77,
+            "cannot plan fork with right arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            8.77,
+            "repair: A(left): fork -> left of plate"
+          ],
+          [
+            15.17,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            15.5,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ],
+          [
+            15.5,
+            "cannot plan fork with left arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            15.5,
+            "repair: B(right): fork -> hand-off pad then A(left): fork -> left of plate"
+          ]
+        ],
+        "sim_time_s": 30.73333333334431,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 14004,
+        "command": "Hand the fork from the right arm to the left arm and place it left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "handoff_pad"
+          },
+          {
+            "arm": "right",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "relay"
+            ]
+          },
+          {
+            "right": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 2 phases (cached)"
+          ],
+          [
+            0.5,
+            "cannot plan fork with left arm (fork->relay: no collision-free IK chain); repairing"
+          ],
+          [
+            0.5,
+            "repair: B(right): fork -> hand-off pad"
+          ],
+          [
+            9.4,
+            "cannot plan fork with right arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            9.4,
+            "repair: A(left): fork -> left of plate"
+          ],
+          [
+            15.83,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            16.17,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ],
+          [
+            16.17,
+            "cannot plan fork with left arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            16.17,
+            "repair: B(right): fork -> hand-off pad then A(left): fork -> left of plate"
+          ]
+        ],
+        "sim_time_s": 31.200000000011347,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 14005,
+        "command": "Use both arms to move the fork from the right side to the left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "fork",
+            "target": "handoff_pad"
+          },
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "fork",
+              "relay"
+            ]
+          },
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "critic: The command asks for a hand-off between the arms, but no object has hand_off=true."
+          ],
+          [
+            0.5,
+            "plan: 2 steps, 2 phases (cached)"
+          ],
+          [
+            15.13,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            15.47,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ],
+          [
+            15.47,
+            "cannot plan fork with left arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            15.47,
+            "repair: B(right): fork -> hand-off pad then A(left): fork -> left of plate"
+          ]
+        ],
+        "sim_time_s": 30.63333333334423,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 14006,
+        "command": "Pass the fork over to the left arm, then set it to the left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "fork",
+            "target": "handoff_pad"
+          },
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "fork",
+              "relay"
+            ]
+          },
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 2 phases (cached)"
+          ],
+          [
+            15.43,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            15.77,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ],
+          [
+            15.77,
+            "cannot plan fork with left arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            15.77,
+            "repair: B(right): fork -> hand-off pad then A(left): fork -> left of plate"
+          ]
+        ],
+        "sim_time_s": 30.56666666667751,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 14007,
+        "command": "Pass the fork over to the left arm, then set it to the left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "fork",
+            "target": "handoff_pad"
+          },
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "fork",
+              "relay"
+            ]
+          },
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 2 phases (cached)"
+          ],
+          [
+            15.2,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            15.53,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ],
+          [
+            15.53,
+            "cannot plan fork with left arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            15.53,
+            "repair: B(right): fork -> hand-off pad then A(left): fork -> left of plate"
+          ]
+        ],
+        "sim_time_s": 31.100000000011267,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 14008,
+        "command": "Hand the fork from the right arm to the left arm and place it left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "handoff_pad"
+          },
+          {
+            "arm": "right",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "relay"
+            ]
+          },
+          {
+            "right": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 2 phases (cached)"
+          ],
+          [
+            0.5,
+            "cannot plan fork with left arm (fork->relay: no collision-free IK chain); repairing"
+          ],
+          [
+            0.5,
+            "repair: B(right): fork -> hand-off pad"
+          ],
+          [
+            8.53,
+            "cannot plan fork with right arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            8.53,
+            "repair: A(left): fork -> left of plate"
+          ],
+          [
+            15.4,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            15.73,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ],
+          [
+            15.73,
+            "cannot plan fork with left arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            15.73,
+            "repair: B(right): fork -> hand-off pad then A(left): fork -> left of plate"
+          ]
+        ],
+        "sim_time_s": 31.200000000011347,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 14009,
+        "command": "Pass the fork over to the left arm, then set it to the left of the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true
+        },
+        "executed": [
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "right",
+            "fork",
+            "relay"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "fork",
+            "target": "handoff_pad"
+          },
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "fork",
+              "relay"
+            ]
+          },
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 2 steps, 2 phases (cached)"
+          ],
+          [
+            15.43,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            15.77,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ],
+          [
+            15.77,
+            "cannot plan fork with left arm (fork->fork_target: no collision-free IK chain); repairing"
+          ],
+          [
+            15.77,
+            "repair: B(right): fork -> hand-off pad then A(left): fork -> left of plate"
+          ]
+        ],
+        "sim_time_s": 30.16666666667719,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      }
+    ],
+    "full_setting": [
+      {
+        "seed": 15000,
+        "command": "Set out the fork, the spoon and the cup around the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 3 steps, 2 phases (cached)"
+          ],
+          [
+            7.6,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.93,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 21.766666666670506,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15001,
+        "command": "Place the fork left and the spoon right of the plate, then put the cup at the top right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 3 steps, 2 phases (cached)"
+          ],
+          [
+            7.27,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.6,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 20.76666666666971,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15002,
+        "command": "Place the fork left and the spoon right of the plate, then put the cup at the top right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 3 steps, 2 phases (cached)"
+          ],
+          [
+            7.43,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.77,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 21.16666666667003,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15003,
+        "command": "Set out the fork, the spoon and the cup around the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 3 steps, 2 phases (cached)"
+          ],
+          [
+            7.03,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.37,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 20.233333333335953,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15004,
+        "command": "Set out the fork, the spoon and the cup around the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 3 steps, 2 phases (cached)"
+          ],
+          [
+            7.2,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.53,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 20.433333333336112,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15005,
+        "command": "Set out the fork, the spoon and the cup around the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 3 steps, 2 phases (cached)"
+          ],
+          [
+            8.27,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            8.6,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 21.433333333336908,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15006,
+        "command": "Place the fork left and the spoon right of the plate, then put the cup at the top right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 3 steps, 2 phases (cached)"
+          ],
+          [
+            6.77,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.1,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 19.900000000002354,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15007,
+        "command": "Set out the fork, the spoon and the cup around the plate.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 3 steps, 2 phases (cached)"
+          ],
+          [
+            7.73,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            8.07,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 21.500000000003627,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15008,
+        "command": "Set out the fork, the spoon and the cup around the plate.",
+        "preplaced": null,
+        "success": false,
+        "placed": {
+          "fork": true,
+          "spoon": true,
+          "cup": false
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 3 steps, 2 phases (cached)"
+          ],
+          [
+            7.03,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.37,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ],
+          [
+            13.8,
+            "cannot plan cup with right arm (cup->cup_target: OMPL ->home); repairing"
+          ],
+          [
+            13.8,
+            "no feasible repair for cup"
+          ]
+        ],
+        "sim_time_s": 14.299999999999349,
+        "planner_latency_s": null,
+        "plan_success": false,
+        "extra_objects": []
+      },
+      {
+        "seed": 15009,
+        "command": "Place the fork left and the spoon right of the plate, then put the cup at the top right.",
+        "preplaced": null,
+        "success": true,
+        "placed": {
+          "fork": true,
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "left",
+            "fork",
+            "fork_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "fork",
+            "fork_target"
+          ],
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "left",
+            "object": "fork",
+            "target": "left_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "left": [
+              "fork",
+              "fork_target"
+            ],
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.5,
+            "plan: 3 steps, 2 phases (cached)"
+          ],
+          [
+            7.63,
+            "DISTURBANCE: fork pushed off its target"
+          ],
+          [
+            7.97,
+            "camera: fork not at left of plate; re-planning from its new pose"
+          ]
+        ],
+        "sim_time_s": 21.766666666670506,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      }
+    ]
+  }
+}

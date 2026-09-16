@@ -1,0 +1,98 @@
+set_table ep0 seed 13000: 'Lay out the fork and spoon around the plate.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 1 steps, 1 phases (15.0s LLM)
+== set_table ep0: OK placed={'spoon': True} extra=[] wall=66s
+set_table ep1 seed 13001: 'Set the table for dinner.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 1 steps, 1 phases (15.1s LLM)
+== set_table ep1: OK placed={'spoon': True} extra=[] wall=25s
+set_table ep2 seed 13002: 'Set the table for dinner.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 1 steps, 1 phases (cached)
+== set_table ep2: OK placed={'spoon': True} extra=[] wall=1s
+set_table ep3 seed 13003: 'Set the table.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 1 steps, 1 phases (15.0s LLM)
+== set_table ep3: OK placed={'spoon': True} extra=[] wall=16s
+set_table ep4 seed 13004: 'Set the table.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 1 steps, 1 phases (cached)
+== set_table ep4: OK placed={'spoon': True} extra=[] wall=1s
+set_table ep5 seed 13005: 'Set the table.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 1 steps, 1 phases (cached)
+== set_table ep5: OK placed={'spoon': True} extra=[] wall=1s
+set_table ep6 seed 13006: 'Set the table.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 1 steps, 1 phases (cached)
+== set_table ep6: OK placed={'spoon': True} extra=[] wall=1s
+set_table ep7 seed 13007: 'Set the table.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 1 steps, 1 phases (cached)
+== set_table ep7: OK placed={'spoon': True} extra=[] wall=1s
+set_table ep8 seed 13008: 'Set the table.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 1 steps, 1 phases (cached)
+== set_table ep8: OK placed={'spoon': True} extra=[] wall=1s
+set_table ep9 seed 13009: 'Lay out the fork and spoon around the plate.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 1 steps, 1 phases (cached)
+== set_table ep9: OK placed={'spoon': True} extra=[] wall=1s
+==== set_table: 10/10
+full_setting ep0 seed 15000: 'Place the fork left and the spoon right of the plate, then put the cup at the top right.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 2 steps, 2 phases (15.1s LLM)
+== full_setting ep0: OK placed={'spoon': True, 'cup': True} extra=[] wall=31s
+full_setting ep1 seed 15001: 'Set out the fork, the spoon and the cup around the plate.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 2 steps, 2 phases (15.1s LLM)
+== full_setting ep1: OK placed={'spoon': True, 'cup': True} extra=[] wall=30s
+full_setting ep2 seed 15002: 'Place the fork left and the spoon right of the plate, then put the cup at the top right.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 2 steps, 2 phases (cached)
+== full_setting ep2: OK placed={'spoon': True, 'cup': True} extra=[] wall=1s
+full_setting ep3 seed 15003: 'Place the fork left and the spoon right of the plate, then put the cup at the top right.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 2 steps, 2 phases (cached)
+== full_setting ep3: OK placed={'spoon': True, 'cup': True} extra=[] wall=1s
+full_setting ep4 seed 15004: 'Set out the fork, the spoon and the cup around the plate.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 2 steps, 2 phases (cached)
+  [ 14.0s] camera: cup not at top right; re-planning from its new pose
+  [ 14.0s] camera: cup not visible; can't plan it
+== full_setting ep4: FAIL placed={'spoon': True, 'cup': False} extra=[] wall=1s
+full_setting ep5 seed 15005: 'Set out the fork, the spoon and the cup around the plate.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 2 steps, 2 phases (cached)
+== full_setting ep5: OK placed={'spoon': True, 'cup': True} extra=[] wall=1s
+full_setting ep6 seed 15006: 'Place the fork left and the spoon right of the plate, then put the cup at the top right.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 2 steps, 2 phases (cached)
+== full_setting ep6: OK placed={'spoon': True, 'cup': True} extra=[] wall=1s
+full_setting ep7 seed 15007: 'Place the fork left and the spoon right of the plate, then put the cup at the top right.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 2 steps, 2 phases (cached)
+== full_setting ep7: OK placed={'spoon': True, 'cup': True} extra=[] wall=1s
+full_setting ep8 seed 15008: 'Place the fork left and the spoon right of the plate, then put the cup at the top right.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 2 steps, 2 phases (cached)
+  [  7.0s] cannot plan cup with right arm (cup->cup_target: OMPL ->home); repairing
+  [  7.0s] no feasible repair for cup
+== full_setting ep8: FAIL placed={'spoon': True, 'cup': False} extra=[] wall=2s
+full_setting ep9 seed 15009: 'Set out the fork, the spoon and the cup around the plate.'
+  [  0.8s] critic: The fork is already in place, so do not move it.
+  [  0.8s] plan: 2 steps, 2 phases (cached)
+== full_setting ep9: OK placed={'spoon': True, 'cup': True} extra=[] wall=1s
+==== full_setting: 8/10
+{
+ "set_table": {
+  "successes": 10,
+  "episodes": 10,
+  "success_rate": 1.0
+ },
+ "full_setting": {
+  "successes": 8,
+  "episodes": 10,
+  "success_rate": 0.8
+ }
+}

@@ -1,0 +1,206 @@
+extra0 ep0 seed 17000: 'Hand the fork from arm B to arm A and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra0 ep0: OK placed={'fork': True} extra=None wall=18s
+extra0 ep1 seed 17001: 'Hand the fork from arm B to arm A and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra0 ep1: OK placed={'fork': True} extra=None wall=17s
+extra0 ep2 seed 17002: 'Hand the fork from arm B to arm A and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra0 ep2: OK placed={'fork': True} extra=None wall=1s
+extra0 ep3 seed 17003: 'Hand the fork from arm B to arm A and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra0 ep3: OK placed={'fork': True} extra=None wall=1s
+extra0 ep4 seed 17004: 'Hand the fork from arm B to arm A and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra0 ep4: OK placed={'fork': True} extra=None wall=1s
+extra0 ep5 seed 17005: 'Hand the fork from arm B to arm A and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra0 ep5: OK placed={'fork': True} extra=None wall=1s
+extra0 ep6 seed 17006: 'Hand the fork from arm B to arm A and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra0 ep6: OK placed={'fork': True} extra=None wall=1s
+extra0 ep7 seed 17007: 'Hand the fork from arm B to arm A and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra0 ep7: OK placed={'fork': True} extra=None wall=1s
+extra0 ep8 seed 17008: 'Hand the fork from arm B to arm A and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra0 ep8: OK placed={'fork': True} extra=None wall=1s
+extra0 ep9 seed 17009: 'Hand the fork from arm B to arm A and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra0 ep9: OK placed={'fork': True} extra=None wall=1s
+==== extra0: 10/10
+extra1 ep0 seed 17100: 'Arm B, put the cup at the top right, and arm A, put the fork left of the plate.'
+  [  0.5s] critic: The command does not ask to move the spoon, but your plan does.
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== extra1 ep0: OK placed={'cup': True, 'fork': True} extra=None wall=10s
+extra1 ep1 seed 17101: 'Arm B, put the cup at the top right, and arm A, put the fork left of the plate.'
+  [  0.5s] critic: The command does not ask to move the spoon, but your plan does.
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== extra1 ep1: OK placed={'cup': True, 'fork': True} extra=None wall=5s
+extra1 ep2 seed 17102: 'Arm B, put the cup at the top right, and arm A, put the fork left of the plate.'
+  [  0.5s] critic: The command does not ask to move the spoon, but your plan does.
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== extra1 ep2: OK placed={'cup': True, 'fork': True} extra=None wall=1s
+extra1 ep3 seed 17103: 'Arm B, put the cup at the top right, and arm A, put the fork left of the plate.'
+  [  0.5s] critic: The command does not ask to move the spoon, but your plan does.
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+  [  0.5s] parallel plan failed (cup->cup_target: no collision-free IK chain); running sequentially
+  [  0.5s] cannot plan cup with right arm (cup->cup_target: no collision-free IK chain); repairing
+  [  0.5s] no feasible repair for cup
+== extra1 ep3: FAIL placed={'cup': False, 'fork': True} extra=None wall=4s
+extra1 ep4 seed 17104: 'Arm B, put the cup at the top right, and arm A, put the fork left of the plate.'
+  [  0.5s] critic: The command does not ask to move the spoon, but your plan does.
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== extra1 ep4: OK placed={'cup': True, 'fork': True} extra=None wall=1s
+extra1 ep5 seed 17105: 'Arm B, put the cup at the top right, and arm A, put the fork left of the plate.'
+  [  0.5s] critic: The command does not ask to move the spoon, but your plan does.
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== extra1 ep5: OK placed={'cup': True, 'fork': True} extra=None wall=1s
+extra1 ep6 seed 17106: 'Arm B, put the cup at the top right, and arm A, put the fork left of the plate.'
+  [  0.5s] critic: The command does not ask to move the spoon, but your plan does.
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== extra1 ep6: OK placed={'cup': True, 'fork': True} extra=None wall=1s
+extra1 ep7 seed 17107: 'Arm B, put the cup at the top right, and arm A, put the fork left of the plate.'
+  [  0.5s] critic: The command does not ask to move the spoon, but your plan does.
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== extra1 ep7: OK placed={'cup': True, 'fork': True} extra=None wall=1s
+extra1 ep8 seed 17108: 'Arm B, put the cup at the top right, and arm A, put the fork left of the plate.'
+  [  0.5s] critic: The command does not ask to move the spoon, but your plan does.
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== extra1 ep8: OK placed={'cup': True, 'fork': True} extra=None wall=1s
+extra1 ep9 seed 17109: 'Arm B, put the cup at the top right, and arm A, put the fork left of the plate.'
+  [  0.5s] critic: The command does not ask to move the spoon, but your plan does.
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== extra1 ep9: OK placed={'cup': True, 'fork': True} extra=None wall=1s
+==== extra1: 9/10
+extra2 ep0 seed 17200: 'Set the table, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra2 ep0: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=9s
+extra2 ep1 seed 17201: 'Set the table, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra2 ep1: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=16s
+extra2 ep2 seed 17202: 'Set the table, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra2 ep2: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=1s
+extra2 ep3 seed 17203: 'Set the table, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra2 ep3: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=1s
+extra2 ep4 seed 17204: 'Set the table, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra2 ep4: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=1s
+extra2 ep5 seed 17205: 'Set the table, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra2 ep5: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=1s
+extra2 ep6 seed 17206: 'Set the table, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+  [  7.3s] cannot plan cup with right arm (cup->cup_target: OMPL ->home); repairing
+  [  7.3s] no feasible repair for cup
+== extra2 ep6: FAIL placed={'fork': True, 'spoon': True, 'cup': False} extra=None wall=3s
+extra2 ep7 seed 17207: 'Set the table, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+  [  0.5s] parallel plan failed (spoon->spoon_target: no collision-free IK chain); running sequentially
+  [  6.8s] cannot plan spoon with right arm (spoon->spoon_target: no collision-free IK chain); repairing
+  [  6.8s] repair: B(right): spoon -> hand-off pad then A(left): spoon -> right of plate
+== extra2 ep7: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=4s
+extra2 ep8 seed 17208: 'Set the table, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra2 ep8: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=1s
+extra2 ep9 seed 17209: 'Set the table, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra2 ep9: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=1s
+==== extra2: 9/10
+extra3 ep0 seed 17300: 'Pass the spoon to arm A and have it place the spoon left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra3 ep0: OK placed={'spoon': True} extra=None wall=19s
+extra3 ep1 seed 17301: 'Pass the spoon to arm A and have it place the spoon left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra3 ep1: OK placed={'spoon': True} extra=None wall=20s
+extra3 ep2 seed 17302: 'Pass the spoon to arm A and have it place the spoon left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra3 ep2: OK placed={'spoon': True} extra=None wall=1s
+extra3 ep3 seed 17303: 'Pass the spoon to arm A and have it place the spoon left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra3 ep3: OK placed={'spoon': True} extra=None wall=1s
+extra3 ep4 seed 17304: 'Pass the spoon to arm A and have it place the spoon left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra3 ep4: OK placed={'spoon': True} extra=None wall=1s
+extra3 ep5 seed 17305: 'Pass the spoon to arm A and have it place the spoon left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra3 ep5: OK placed={'spoon': True} extra=None wall=1s
+extra3 ep6 seed 17306: 'Pass the spoon to arm A and have it place the spoon left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra3 ep6: OK placed={'spoon': True} extra=None wall=1s
+extra3 ep7 seed 17307: 'Pass the spoon to arm A and have it place the spoon left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra3 ep7: OK placed={'spoon': True} extra=None wall=1s
+extra3 ep8 seed 17308: 'Pass the spoon to arm A and have it place the spoon left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra3 ep8: OK placed={'spoon': True} extra=None wall=1s
+extra3 ep9 seed 17309: 'Pass the spoon to arm A and have it place the spoon left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== extra3 ep9: OK placed={'spoon': True} extra=None wall=1s
+==== extra3: 10/10
+extra4 ep0 seed 17400: 'Arm A, put the fork left of the plate. Arm B, put the spoon on the right, then the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+  [  7.2s] cannot plan cup with right arm (cup->cup_target: OMPL ->home); repairing
+  [  7.2s] no feasible repair for cup
+== extra4 ep0: FAIL placed={'fork': True, 'spoon': True, 'cup': False} extra=None wall=13s
+extra4 ep1 seed 17401: 'Arm A, put the fork left of the plate. Arm B, put the spoon on the right, then the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra4 ep1: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=17s
+extra4 ep2 seed 17402: 'Arm A, put the fork left of the plate. Arm B, put the spoon on the right, then the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra4 ep2: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=1s
+extra4 ep3 seed 17403: 'Arm A, put the fork left of the plate. Arm B, put the spoon on the right, then the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra4 ep3: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=1s
+extra4 ep4 seed 17404: 'Arm A, put the fork left of the plate. Arm B, put the spoon on the right, then the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra4 ep4: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=1s
+extra4 ep5 seed 17405: 'Arm A, put the fork left of the plate. Arm B, put the spoon on the right, then the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+  [  7.3s] cannot plan cup with right arm (cup->cup_target: OMPL ->home); repairing
+  [  7.3s] no feasible repair for cup
+== extra4 ep5: FAIL placed={'fork': True, 'spoon': True, 'cup': False} extra=None wall=3s
+extra4 ep6 seed 17406: 'Arm A, put the fork left of the plate. Arm B, put the spoon on the right, then the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra4 ep6: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=1s
+extra4 ep7 seed 17407: 'Arm A, put the fork left of the plate. Arm B, put the spoon on the right, then the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra4 ep7: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=1s
+extra4 ep8 seed 17408: 'Arm A, put the fork left of the plate. Arm B, put the spoon on the right, then the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+  [ 13.5s] camera: cup tipped over; top-down grasp can't recover it
+== extra4 ep8: FAIL placed={'fork': True, 'spoon': True, 'cup': False} extra=None wall=1s
+extra4 ep9 seed 17409: 'Arm A, put the fork left of the plate. Arm B, put the spoon on the right, then the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== extra4 ep9: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=None wall=1s
+==== extra4: 7/10
+{
+ "extra0": {
+  "successes": 10,
+  "episodes": 10,
+  "success_rate": 1.0
+ },
+ "extra1": {
+  "successes": 9,
+  "episodes": 10,
+  "success_rate": 0.9
+ },
+ "extra2": {
+  "successes": 9,
+  "episodes": 10,
+  "success_rate": 0.9
+ },
+ "extra3": {
+  "successes": 10,
+  "episodes": 10,
+  "success_rate": 1.0
+ },
+ "extra4": {
+  "successes": 7,
+  "episodes": 10,
+  "success_rate": 0.7
+ }
+}
+EXTRADONE

@@ -12,4 +12,5 @@ dependencies = [
     "onnx>=1.22.0",
     "opencv-python>=5.0.0.93",
     "openvino>=2024.4",
+    "openvino-genai==2026.3.1.0",
 ]

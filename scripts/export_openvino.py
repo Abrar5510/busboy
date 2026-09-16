@@ -1,21 +1,19 @@
 """Export ACT to ONNX -> OpenVINO IR (f32, with end-to-end parity check) and an INT8 IR (NNCF post-training
-quantization calibrated on real env observations); attempt SmolVLA export.
+quantization calibrated on real env observations); export the full SmolVLA sampler to OpenVINO IR (f32 + INT8
+weights), parity-checked the same way.
 
     python -m scripts.export_openvino --act-ckpt outputs/train/act_dinner/checkpoints/last/pretrained_model
     python -m scripts.export_openvino --smolvla-ckpt outputs/train/smolvla_dinner/checkpoints/last/pretrained_model
 
-Writes results/act_dinner.xml, results/act_dinner_int8.xml (+ .bin) and results/openvino_export.json.
+Writes results/act_dinner*.xml, results/smolvla_dinner*.xml (+ .bin) and results/openvino_export.json.
 Runs anywhere (no Intel hardware needed); the INT8 closed-loop check is `scripts.eval --ir results/act_dinner_int8.xml`.
 """
 
 import argparse
 import json
-import shutil
-import subprocess
 import traceback
 from pathlib import Path
 
-import numpy as np
 import openvino as ov
 import torch
 from lerobot.policies import get_policy_class, make_pre_post_processors
@@ -122,35 +120,113 @@ def export_act(ckpt, out_xml, parity_n):
     return report
 
 
-def export_smolvla(ckpt, out_dir):
-    status = {}
-    cli = shutil.which("optimum-cli")
-    if cli is None:
-        status["optimum_cli"] = ("not attempted: optimum-intel not installed. A LeRobot SmolVLA checkpoint has no "
-                                 "transformers model_type, so optimum's exporter has no architecture to map it to.")
-    else:
-        r = subprocess.run([cli, "export", "openvino", "-m", str(ckpt), str(out_dir / "smolvla_ov")],
-                           capture_output=True, text=True, timeout=3600)
-        status["optimum_cli"] = {"returncode": r.returncode, "stderr_tail": r.stderr[-1500:]}
-        if r.returncode == 0:
-            return status
+class SmolVLAWrapper(torch.nn.Module):
+    """Positional (state, lang_tokens, lang_mask, noise, *images in config.image_features order) -> action chunk
+    (normalized space). The whole sampler is one graph: SigLIP + SmolVLM prefix (KV cache built once), then
+    config.num_steps Euler steps of the action expert, unrolled at trace time. Noise is an input so the IR is
+    deterministic and parity-checkable; at run time the caller draws it."""
 
-    # Fallback: the frozen vision encoder alone (the flow-matching action expert loops over denoising steps).
-    try:
-        policy = get_policy_class("smolvla").from_pretrained(ckpt).to("cpu").eval()
-        name, vision = next((n, m) for n, m in policy.named_modules() if n.endswith("vision_model"))
-        example = torch.rand(1, 3, *policy.config.resize_imgs_with_padding)
-        xml = out_dir / "smolvla_vision_encoder.xml"
+    def __init__(self, policy):
+        super().__init__()
+        self.policy = policy
+        self.keys = list(policy.config.image_features)
+
+    def forward(self, state, lang_tokens, lang_mask, noise, *images):
+        p = self.policy
+        batch = {"observation.state": state, **dict(zip(self.keys, images))}
+        imgs, img_masks = p.prepare_images(batch)
+        actions = p.model.sample_actions(imgs, img_masks, lang_tokens, lang_mask, p.prepare_state(batch), noise=noise)
+        return actions[:, :, :p.config.action_feature.shape[0]]
+
+
+def smolvla_inputs(policy, b, noise):
+    keys = list(policy.config.image_features)
+    return ([b["observation.state"], b["observation.language.tokens"], b["observation.language.attention_mask"].bool(),
+             noise] + [b[k] for k in keys])
+
+
+def export_smolvla(ckpt, out_dir, parity_n):
+    """Full SmolVLA -> OpenVINO IR (f32, parity-checked) + INT8 weight-compressed IR."""
+    # float(): the checkpoint loads the VLM in bf16; trace (and compare) in f32 so parity measures the export,
+    # not bf16 rounding (bf16 torch vs f32 IR differs by ~3e-3 rad after 10 flow steps).
+    policy = get_policy_class("smolvla").from_pretrained(ckpt).to("cpu").float().eval()
+    pre, post = make_pre_post_processors(policy.config, ckpt,
+                                      preprocessor_overrides={"device_processor": {"device": "cpu"}})
+    wrapper = SmolVLAWrapper(policy).eval()
+    env = DinnerEnv()
+    cfg = policy.config
+    shape = (1, cfg.chunk_size, cfg.max_action_dim)
+
+    def processed(seed, task="set_table"):
+        return pre(to_batch(env.reset(seed, "nominal", task), TASKS[task]["train"][0]))
+
+    # transformers' mask helper breaks under tracing (a traced length is a 0-d tensor). Fixed-size images make
+    # every vision patch valid, so the SigLIP mask is all-ones and dropping it is exact (the parity check agrees).
+    import transformers.models.smolvlm.modeling_smolvlm as smolvlm
+
+    smolvlm.create_bidirectional_mask = lambda **kw: None
+    # The KV cache starts as an empty 1-D tensor and concatenates onto it, which OpenVINO's Concat rejects;
+    # take the first update as-is instead (same values).
+    from transformers.cache_utils import DynamicLayer
+
+    def update(self, key_states, value_states, *args, **kwargs):
+        if not self.is_initialized or self.keys.numel() == 0:
+            self.lazy_initialization(key_states, value_states)
+            self.keys, self.values = key_states, value_states
+        else:
+            self.keys = torch.cat([self.keys, key_states], dim=-2)
+            self.values = torch.cat([self.values, value_states], dim=-2)
+        return self.keys, self.values
+
+    DynamicLayer.update = update
+
+    torch.manual_seed(0)
+    example = smolvla_inputs(policy, processed(20000), torch.randn(shape))
+    xml = out_dir / "smolvla_dinner.xml"
+    names = ["state", "lang_tokens", "lang_mask", "noise"] + [f"img_{k.split('.')[-1]}" for k in wrapper.keys]
+    with torch.inference_mode():  # static shapes: the trace bakes sequence lengths into the attention masks
+        ov_model = ov.convert_model(wrapper, example_input=tuple(example),
+                                    input=[ov.PartialShape(list(t.shape)) for t in example])
+    for inp, name in zip(ov_model.inputs, names):
+        inp.get_tensor().set_names({name})
+    ov.save_model(ov_model, str(xml))  # weights saved as f16 by default (compress_to_fp16); run in f32
+    core = ov.Core()
+    compiled = core.compile_model(str(xml), "CPU", {"INFERENCE_PRECISION_HINT": "f32"})
+
+    def ir(c, inputs):
+        return torch.from_numpy(c([t.numpy() for t in inputs])[0])
+
+    errs, errs_rad = [], []  # whole chunk in normalized space; first action in radians (what the robot gets)
+    for s in range(parity_n):
+        noise = torch.randn(shape)
+        inputs = smolvla_inputs(policy, processed(20001 + s, list(TASKS)[s % len(TASKS)]), noise)
         with torch.inference_mode():
-            ov.save_model(ov.convert_model(vision, example_input=example), str(xml))
-            ref = vision(example)
-        ref = ref.last_hidden_state if hasattr(ref, "last_hidden_state") else ref
-        out = ov.Core().compile_model(str(xml), "CPU", {"INFERENCE_PRECISION_HINT": "f32"})([example.numpy()])[0]
-        err = float((ref - torch.from_numpy(out)).abs().max())
-        status["vision_encoder"] = {"module": name, "ir": str(xml), "parity_max_abs_err": err}
-    except Exception:
-        status["vision_encoder"] = {"error": traceback.format_exc()[-1500:]}
-    return status
+            ref = wrapper(*inputs)
+        out = ir(compiled, inputs)
+        errs.append(float((ref - out).abs().max()))
+        errs_rad.append(float((post(ref[:, 0]) - post(out[:, 0])).abs().max()))
+    report = {"ir": str(xml), "inputs": names, "num_steps": cfg.num_steps, "chunk_size": cfg.chunk_size,
+              "parity_max_abs_err": max(errs_rad), "parity_max_abs_err_normalized_chunk": max(errs),
+              "parity_tol": PARITY_TOL, "parity_pass": max(errs_rad) < PARITY_TOL, "reference": "PyTorch f32"}
+    print(f"SmolVLA parity: first action {max(errs_rad):.2e} rad, whole chunk {max(errs):.2e} normalized")
+
+    import nncf
+
+    int8_xml = out_dir / "smolvla_dinner_int8.xml"
+    ov.save_model(nncf.compress_weights(core.read_model(str(xml)), mode=nncf.CompressWeightsMode.INT8_ASYM),
+                  str(int8_xml))
+    c8 = core.compile_model(str(int8_xml), "CPU", {"INFERENCE_PRECISION_HINT": "f32"})
+    errs8 = []
+    for s in range(parity_n):
+        noise = torch.randn(shape)
+        inputs = smolvla_inputs(policy, processed(20001 + s), noise)
+        errs8.append(float((post(ir(compiled, inputs)[:, 0]) - post(ir(c8, inputs)[:, 0])).abs().max()))
+    report["int8"] = {"ir": str(int8_xml), "mode": "weight-only INT8 (NNCF compress_weights, int8_asym)",
+                      "max_abs_action_err_vs_f32_rad": max(errs8),
+                      "size_mb": {"ir_fp16_weights": xml.with_suffix(".bin").stat().st_size / 1e6,
+                                  "int8": int8_xml.with_suffix(".bin").stat().st_size / 1e6}}
+    print(f"SmolVLA INT8 written; first-action err vs f32 {max(errs8):.3f} rad")
+    return report
 
 
 def main():
@@ -168,7 +244,7 @@ def main():
     if args.act_ckpt:
         report["act"] = export_act(args.act_ckpt, out / "act_dinner.xml", args.parity_n)
     if args.smolvla_ckpt:
-        report["smolvla"] = export_smolvla(args.smolvla_ckpt, out)
+        report["smolvla"] = export_smolvla(args.smolvla_ckpt, out, args.parity_n)
     report_path.write_text(json.dumps(report, indent=2))
     print(json.dumps(report, indent=2))
 

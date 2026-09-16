@@ -1,0 +1,1340 @@
+{
+  "policy": "agent (LLM planner + perception + mink/OMPL skills)",
+  "planner_model": "qwen3-1.7b-int4-ov",
+  "planner_device": "CPU",
+  "rand": "nominal",
+  "paraphrases": "train",
+  "disturb": false,
+  "preplaced": true,
+  "tasks": {
+    "set_table": {
+      "successes": 10,
+      "episodes": 10,
+      "success_rate": 1.0
+    },
+    "full_setting": {
+      "successes": 8,
+      "episodes": 10,
+      "success_rate": 0.8
+    }
+  },
+  "planner_latency_s_uncached": [
+    7.322346791988821,
+    7.670388291997369,
+    7.49007620899647,
+    7.589483834002749,
+    7.450488833012059,
+    7.536533250007778,
+    7.410751584000536,
+    7.720320249994984,
+    7.39319475000957,
+    7.744204916991293
+  ],
+  "episode_wall_s_mean": 9.008151495898346,
+  "machine": {
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "episodes": {
+    "set_table": [
+      {
+        "seed": 13000,
+        "command": "Lay out the fork and spoon around the plate.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 1 steps, 1 phases (15.0s LLM)"
+          ]
+        ],
+        "sim_time_s": 7.63333333333306,
+        "planner_latency_s": 14.99273508398619,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13001,
+        "command": "Set the table for dinner.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 1 steps, 1 phases (15.1s LLM)"
+          ]
+        ],
+        "sim_time_s": 7.7333333333330545,
+        "planner_latency_s": 15.07956004299922,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13002,
+        "command": "Set the table for dinner.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 1 steps, 1 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 7.7333333333330545,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13003,
+        "command": "Set the table.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 1 steps, 1 phases (15.0s LLM)"
+          ]
+        ],
+        "sim_time_s": 7.466666666666403,
+        "planner_latency_s": 14.987022083019838,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13004,
+        "command": "Set the table.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 1 steps, 1 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 7.966666666666375,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13005,
+        "command": "Set the table.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 1 steps, 1 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 7.766666666666386,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13006,
+        "command": "Set the table.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 1 steps, 1 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 8.233333333333027,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13007,
+        "command": "Set the table.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 1 steps, 1 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 7.999999999999706,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13008,
+        "command": "Set the table.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 1 steps, 1 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 7.999999999999706,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 13009,
+        "command": "Lay out the fork and spoon around the plate.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 1 steps, 1 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 7.933333333333043,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      }
+    ],
+    "full_setting": [
+      {
+        "seed": 15000,
+        "command": "Place the fork left and the spoon right of the plate, then put the cup at the top right.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 2 steps, 2 phases (15.1s LLM)"
+          ]
+        ],
+        "sim_time_s": 13.966666666666034,
+        "planner_latency_s": 15.13107183399552,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15001,
+        "command": "Set out the fork, the spoon and the cup around the plate.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 2 steps, 2 phases (15.1s LLM)"
+          ]
+        ],
+        "sim_time_s": 13.299999999999406,
+        "planner_latency_s": 15.137399667000864,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15002,
+        "command": "Place the fork left and the spoon right of the plate, then put the cup at the top right.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 2 steps, 2 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 14.833333333332652,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15003,
+        "command": "Place the fork left and the spoon right of the plate, then put the cup at the top right.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 2 steps, 2 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 13.666666666666051,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15004,
+        "command": "Set out the fork, the spoon and the cup around the plate.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": false,
+        "placed": {
+          "spoon": true,
+          "cup": false
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 2 steps, 2 phases (cached)"
+          ],
+          [
+            14.03,
+            "camera: cup not at top right; re-planning from its new pose"
+          ],
+          [
+            14.03,
+            "camera: cup not visible; can't plan it"
+          ]
+        ],
+        "sim_time_s": 14.533333333332669,
+        "planner_latency_s": null,
+        "plan_success": false,
+        "extra_objects": []
+      },
+      {
+        "seed": 15005,
+        "command": "Set out the fork, the spoon and the cup around the plate.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 2 steps, 2 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 15.46666666666595,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15006,
+        "command": "Place the fork left and the spoon right of the plate, then put the cup at the top right.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 2 steps, 2 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 13.766666666666046,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15007,
+        "command": "Place the fork left and the spoon right of the plate, then put the cup at the top right.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 2 steps, 2 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 13.63333333333272,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      },
+      {
+        "seed": 15008,
+        "command": "Place the fork left and the spoon right of the plate, then put the cup at the top right.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": false,
+        "placed": {
+          "spoon": true,
+          "cup": false
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 2 steps, 2 phases (cached)"
+          ],
+          [
+            7.0,
+            "cannot plan cup with right arm (cup->cup_target: OMPL ->home); repairing"
+          ],
+          [
+            7.0,
+            "no feasible repair for cup"
+          ]
+        ],
+        "sim_time_s": 7.499999999999734,
+        "planner_latency_s": null,
+        "plan_success": false,
+        "extra_objects": []
+      },
+      {
+        "seed": 15009,
+        "command": "Set out the fork, the spoon and the cup around the plate.",
+        "preplaced": [
+          "fork",
+          "fork_target"
+        ],
+        "success": true,
+        "placed": {
+          "spoon": true,
+          "cup": true
+        },
+        "executed": [
+          [
+            "right",
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "right",
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "goals": [
+          [
+            "spoon",
+            "spoon_target"
+          ],
+          [
+            "cup",
+            "cup_target"
+          ]
+        ],
+        "steps": [
+          {
+            "arm": "right",
+            "object": "spoon",
+            "target": "right_of_plate"
+          },
+          {
+            "arm": "right",
+            "object": "cup",
+            "target": "top_right_of_plate"
+          }
+        ],
+        "phases": [
+          {
+            "right": [
+              "spoon",
+              "spoon_target"
+            ]
+          },
+          {
+            "right": [
+              "cup",
+              "cup_target"
+            ]
+          }
+        ],
+        "log": [
+          [
+            0.83,
+            "critic: The fork is already in place, so do not move it."
+          ],
+          [
+            0.83,
+            "plan: 2 steps, 2 phases (cached)"
+          ]
+        ],
+        "sim_time_s": 14.199999999999354,
+        "planner_latency_s": null,
+        "plan_success": true,
+        "extra_objects": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,78 @@
+
+
+
+OK   [raw] 'Open with arm A: put the fork left of the plate.'
+OK   [critic] 'Open with arm A: put the fork left of the plate.'
+OK   [raw] 'Arm B, place the spoon to the right of the plate.'
+OK   [critic] 'Arm B, place the spoon to the right of the plate.'
+OK   [raw] 'Hand the fork from arm B to arm A and place it left of the plate.'
+OK   [critic] 'Hand the fork from arm B to arm A and place it left of the plate.'
+MISS [raw] 'With arm B put the cup top right, and then with arm A put the fork on the left of the plate.'
+     got  [{'right': ('cup', 'cup_target'), 'left': ('fork', 'fork_target')}, {'right': ('spoon', 'spoon_target')}]
+     want [{'right': ('cup', 'cup_target'), 'left': ('fork', 'fork_target')}]
+OK   [critic] 'With arm B put the cup top right, and then with arm A put the fork on the left of the plate.'
+     critic: The command does not ask to move the spoon, but your plan does.
+OK   [raw] 'Set the table, then put the cup at the top right.'
+OK   [critic] 'Set the table, then put the cup at the top right.'
+OK   [raw] 'Place the fork to the left of the plate.'
+OK   [critic] 'Place the fork to the left of the plate.'
+MISS [raw] "Put the fork down to the plate's left."
+     got  []
+     want [{'left': ('fork', 'fork_target')}]
+OK   [critic] "Put the fork down to the plate's left."
+     critic: The command asks to move the fork, but your plan does not.
+MISS [raw] 'Set the fork on the left side of the plate.'
+     got  [{'left': ('fork', 'fork_target'), 'right': ('spoon', 'spoon_target')}]
+     want [{'left': ('fork', 'fork_target')}]
+OK   [critic] 'Set the fork on the left side of the plate.'
+     critic: The command does not ask to move the spoon, but your plan does.
+OK   [raw] 'Position the fork left of the plate.'
+OK   [critic] 'Position the fork left of the plate.'
+OK   [raw] 'Place the spoon to the right of the plate.'
+OK   [critic] 'Place the spoon to the right of the plate.'
+OK   [raw] "Put the spoon down to the plate's right."
+OK   [critic] "Put the spoon down to the plate's right."
+OK   [raw] 'Set the spoon on the right side of the plate.'
+OK   [critic] 'Set the spoon on the right side of the plate.'
+OK   [raw] 'Position the spoon right of the plate.'
+OK   [critic] 'Position the spoon right of the plate.'
+OK   [raw] 'Put the cup at the top right of the plate.'
+OK   [critic] 'Put the cup at the top right of the plate.'
+OK   [raw] 'Place the cup above and to the right of the plate.'
+OK   [critic] 'Place the cup above and to the right of the plate.'
+OK   [raw] "Set the cup at the plate's upper right."
+OK   [critic] "Set the cup at the plate's upper right."
+OK   [raw] 'Move the cup to the upper right corner of the place setting.'
+OK   [critic] 'Move the cup to the upper right corner of the place setting.'
+OK   [raw] 'Set the table.'
+OK   [critic] 'Set the table.'
+OK   [raw] 'Set the table for dinner.'
+OK   [critic] 'Set the table for dinner.'
+OK   [raw] 'Lay out the fork and spoon around the plate.'
+OK   [critic] 'Lay out the fork and spoon around the plate.'
+OK   [raw] 'Arrange the cutlery for a meal.'
+OK   [critic] 'Arrange the cutlery for a meal.'
+MISS [raw] 'Hand the fork from the right arm to the left arm and place it left of the plate.'
+     got  [{'left': ('fork', 'relay')}, {'right': ('fork', 'fork_target')}]
+     want [{'right': ('fork', 'relay')}, {'left': ('fork', 'fork_target')}]
+MISS [critic] 'Hand the fork from the right arm to the left arm and place it left of the plate.'
+     got  [{'left': ('fork', 'relay')}, {'right': ('fork', 'fork_target')}]
+     want [{'right': ('fork', 'relay')}, {'left': ('fork', 'fork_target')}]
+OK   [raw] 'Pass the fork over to the left arm, then set it to the left of the plate.'
+OK   [critic] 'Pass the fork over to the left arm, then set it to the left of the plate.'
+MISS [raw] 'Use both arms to move the fork from the right side to the left of the plate.'
+     got  [{'left': ('fork', 'fork_target')}]
+     want [{'right': ('fork', 'relay')}, {'left': ('fork', 'fork_target')}]
+OK   [critic] 'Use both arms to move the fork from the right side to the left of the plate.'
+     critic: The command asks for a hand-off between the arms, but no object has hand_off=true.
+OK   [raw] "Transfer the fork between the arms and put it on the plate's left side."
+OK   [critic] "Transfer the fork between the arms and put it on the plate's left side."
+OK   [raw] 'Set a full place setting: fork, spoon, then cup.'
+OK   [critic] 'Set a full place setting: fork, spoon, then cup.'
+OK   [raw] 'Place the fork left and the spoon right of the plate, then put the cup at the top right.'
+OK   [critic] 'Place the fork left and the spoon right of the plate, then put the cup at the top right.'
+OK   [raw] 'Set out the fork, the spoon and the cup around the plate.'
+OK   [critic] 'Set out the fork, the spoon and the cup around the plate.'
+OK   [raw] 'Lay out the fork, the spoon and finally the cup for dinner.'
+OK   [critic] 'Lay out the fork, the spoon and finally the cup for dinner.'
+planner qwen3-1.7b-int4-ov: raw 24/29, with critic 28/29 exact; p50 7.22s per generation on CPU

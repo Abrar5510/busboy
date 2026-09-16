@@ -1,0 +1,252 @@
+fork_left ep0 seed 10000: 'Set the fork on the left side of the plate.'
+  [  0.5s] critic: The command does not ask to move the spoon, but your plan does.
+  [  0.5s] plan: 1 steps, 1 phases (14.6s LLM)
+== fork_left ep0: OK placed={'fork': True} extra=[] wall=63s
+fork_left ep1 seed 10001: "Put the fork down to the plate's left."
+  [  0.5s] critic: The command asks to move the fork, but your plan does not.
+  [  0.5s] plan: 1 steps, 1 phases (16.6s LLM)
+== fork_left ep1: OK placed={'fork': True} extra=[] wall=28s
+fork_left ep2 seed 10002: "Put the fork down to the plate's left."
+  [  0.5s] critic: The command asks to move the fork, but your plan does not.
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== fork_left ep2: OK placed={'fork': True} extra=[] wall=10s
+fork_left ep3 seed 10003: 'Place the fork to the left of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (7.8s LLM)
+== fork_left ep3: OK placed={'fork': True} extra=[] wall=18s
+fork_left ep4 seed 10004: 'Place the fork to the left of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== fork_left ep4: OK placed={'fork': True} extra=[] wall=10s
+fork_left ep5 seed 10005: 'Place the fork to the left of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== fork_left ep5: OK placed={'fork': True} extra=[] wall=10s
+fork_left ep6 seed 10006: 'Place the fork to the left of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== fork_left ep6: OK placed={'fork': True} extra=[] wall=5s
+fork_left ep7 seed 10007: 'Place the fork to the left of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== fork_left ep7: OK placed={'fork': True} extra=[] wall=9s
+fork_left ep8 seed 10008: 'Place the fork to the left of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== fork_left ep8: OK placed={'fork': True} extra=[] wall=10s
+fork_left ep9 seed 10009: 'Set the fork on the left side of the plate.'
+  [  0.5s] critic: The command does not ask to move the spoon, but your plan does.
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== fork_left ep9: OK placed={'fork': True} extra=[] wall=10s
+==== fork_left: 10/10
+spoon_right ep0 seed 11000: "Put the spoon down to the plate's right."
+  [  0.5s] plan: 1 steps, 1 phases (6.9s LLM)
+== spoon_right ep0: OK placed={'spoon': True} extra=[] wall=12s
+spoon_right ep1 seed 11001: 'Set the spoon on the right side of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (6.9s LLM)
+== spoon_right ep1: OK placed={'spoon': True} extra=[] wall=16s
+spoon_right ep2 seed 11002: "Put the spoon down to the plate's right."
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== spoon_right ep2: OK placed={'spoon': True} extra=[] wall=9s
+spoon_right ep3 seed 11003: "Put the spoon down to the plate's right."
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== spoon_right ep3: OK placed={'spoon': True} extra=[] wall=9s
+spoon_right ep4 seed 11004: 'Set the spoon on the right side of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== spoon_right ep4: OK placed={'spoon': True} extra=[] wall=9s
+spoon_right ep5 seed 11005: 'Set the spoon on the right side of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== spoon_right ep5: OK placed={'spoon': True} extra=[] wall=9s
+spoon_right ep6 seed 11006: "Put the spoon down to the plate's right."
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== spoon_right ep6: OK placed={'spoon': True} extra=[] wall=9s
+spoon_right ep7 seed 11007: "Put the spoon down to the plate's right."
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== spoon_right ep7: OK placed={'spoon': True} extra=[] wall=9s
+spoon_right ep8 seed 11008: "Put the spoon down to the plate's right."
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== spoon_right ep8: OK placed={'spoon': True} extra=[] wall=9s
+spoon_right ep9 seed 11009: 'Set the spoon on the right side of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== spoon_right ep9: OK placed={'spoon': True} extra=[] wall=9s
+==== spoon_right: 10/10
+cup_tr ep0 seed 12000: 'Put the cup at the top right of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (6.9s LLM)
+== cup_tr ep0: OK placed={'cup': True} extra=[] wall=12s
+cup_tr ep1 seed 12001: "Set the cup at the plate's upper right."
+  [  0.5s] plan: 1 steps, 1 phases (6.7s LLM)
+== cup_tr ep1: OK placed={'cup': True} extra=[] wall=15s
+cup_tr ep2 seed 12002: "Set the cup at the plate's upper right."
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== cup_tr ep2: OK placed={'cup': True} extra=[] wall=9s
+cup_tr ep3 seed 12003: 'Put the cup at the top right of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== cup_tr ep3: OK placed={'cup': True} extra=[] wall=9s
+cup_tr ep4 seed 12004: 'Place the cup above and to the right of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (6.8s LLM)
+== cup_tr ep4: OK placed={'cup': True} extra=[] wall=16s
+cup_tr ep5 seed 12005: "Set the cup at the plate's upper right."
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== cup_tr ep5: OK placed={'cup': True} extra=[] wall=9s
+cup_tr ep6 seed 12006: 'Place the cup above and to the right of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== cup_tr ep6: OK placed={'cup': True} extra=[] wall=9s
+cup_tr ep7 seed 12007: 'Put the cup at the top right of the plate.'
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== cup_tr ep7: OK placed={'cup': True} extra=[] wall=9s
+cup_tr ep8 seed 12008: "Set the cup at the plate's upper right."
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+== cup_tr ep8: OK placed={'cup': True} extra=[] wall=9s
+cup_tr ep9 seed 12009: "Set the cup at the plate's upper right."
+  [  0.5s] plan: 1 steps, 1 phases (cached)
+  [  0.5s] cannot plan cup with right arm (cup->cup_target: no collision-free IK chain); repairing
+  [  0.5s] no feasible repair for cup
+== cup_tr ep9: FAIL placed={'cup': False} extra=[] wall=6s
+==== cup_tr: 9/10
+set_table ep0 seed 13000: 'Lay out the fork and spoon around the plate.'
+  [  0.5s] plan: 2 steps, 1 phases (7.3s LLM)
+== set_table ep0: OK placed={'fork': True, 'spoon': True} extra=[] wall=17s
+set_table ep1 seed 13001: 'Set the table.'
+  [  0.5s] plan: 2 steps, 1 phases (7.0s LLM)
+== set_table ep1: OK placed={'fork': True, 'spoon': True} extra=[] wall=17s
+set_table ep2 seed 13002: 'Set the table.'
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== set_table ep2: OK placed={'fork': True, 'spoon': True} extra=[] wall=9s
+set_table ep3 seed 13003: 'Lay out the fork and spoon around the plate.'
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== set_table ep3: OK placed={'fork': True, 'spoon': True} extra=[] wall=9s
+set_table ep4 seed 13004: 'Set the table.'
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== set_table ep4: OK placed={'fork': True, 'spoon': True} extra=[] wall=9s
+set_table ep5 seed 13005: 'Set the table for dinner.'
+  [  0.5s] plan: 2 steps, 1 phases (7.1s LLM)
+== set_table ep5: OK placed={'fork': True, 'spoon': True} extra=[] wall=17s
+set_table ep6 seed 13006: 'Set the table.'
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+  [  0.5s] parallel plan failed (fork->fork_target: no collision-free IK chain); running sequentially
+  [  0.5s] cannot plan fork with left arm (fork->fork_target: no collision-free IK chain); repairing
+  [  0.5s] no feasible repair for fork
+== set_table ep6: FAIL placed={'fork': False, 'spoon': True} extra=[] wall=11s
+set_table ep7 seed 13007: 'Set the table.'
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== set_table ep7: OK placed={'fork': True, 'spoon': True} extra=[] wall=9s
+set_table ep8 seed 13008: 'Set the table for dinner.'
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== set_table ep8: OK placed={'fork': True, 'spoon': True} extra=[] wall=9s
+set_table ep9 seed 13009: 'Set the table for dinner.'
+  [  0.5s] plan: 2 steps, 1 phases (cached)
+== set_table ep9: OK placed={'fork': True, 'spoon': True} extra=[] wall=5s
+==== set_table: 9/10
+handoff_fork ep0 seed 14000: 'Pass the fork over to the left arm, then set it to the left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (7.2s LLM)
+== handoff_fork ep0: OK placed={'fork': True} extra=[] wall=23s
+handoff_fork ep1 seed 14001: 'Hand the fork from the right arm to the left arm and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (6.9s LLM)
+  [  0.5s] cannot plan fork with left arm (fork->relay: no collision-free IK chain); repairing
+  [  0.5s] repair: B(right): fork -> hand-off pad
+  [  8.5s] cannot plan fork with right arm (fork->fork_target: no collision-free IK chain); repairing
+  [  8.5s] repair: A(left): fork -> left of plate
+== handoff_fork ep1: OK placed={'fork': True} extra=[] wall=24s
+handoff_fork ep2 seed 14002: 'Hand the fork from the right arm to the left arm and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+  [  0.5s] cannot plan fork with left arm (fork->relay: no collision-free IK chain); repairing
+  [  0.5s] repair: B(right): fork -> hand-off pad
+  [  8.4s] cannot plan fork with right arm (fork->fork_target: no collision-free IK chain); repairing
+  [  8.4s] repair: A(left): fork -> left of plate
+== handoff_fork ep2: OK placed={'fork': True} extra=[] wall=17s
+handoff_fork ep3 seed 14003: 'Hand the fork from the right arm to the left arm and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+  [  0.5s] cannot plan fork with left arm (fork->relay: no collision-free IK chain); repairing
+  [  0.5s] repair: B(right): fork -> hand-off pad
+  [  8.8s] cannot plan fork with right arm (fork->fork_target: no collision-free IK chain); repairing
+  [  8.8s] repair: A(left): fork -> left of plate
+== handoff_fork ep3: OK placed={'fork': True} extra=[] wall=17s
+handoff_fork ep4 seed 14004: 'Hand the fork from the right arm to the left arm and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+  [  0.5s] cannot plan fork with left arm (fork->relay: no collision-free IK chain); repairing
+  [  0.5s] repair: B(right): fork -> hand-off pad
+  [  9.4s] cannot plan fork with right arm (fork->fork_target: no collision-free IK chain); repairing
+  [  9.4s] repair: A(left): fork -> left of plate
+== handoff_fork ep4: OK placed={'fork': True} extra=[] wall=17s
+handoff_fork ep5 seed 14005: 'Use both arms to move the fork from the right side to the left of the plate.'
+  [  0.5s] critic: The command asks for a hand-off between the arms, but no object has hand_off=true.
+  [  0.5s] plan: 2 steps, 2 phases (14.0s LLM)
+== handoff_fork ep5: OK placed={'fork': True} extra=[] wall=30s
+handoff_fork ep6 seed 14006: 'Pass the fork over to the left arm, then set it to the left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== handoff_fork ep6: OK placed={'fork': True} extra=[] wall=17s
+handoff_fork ep7 seed 14007: 'Pass the fork over to the left arm, then set it to the left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== handoff_fork ep7: OK placed={'fork': True} extra=[] wall=16s
+handoff_fork ep8 seed 14008: 'Hand the fork from the right arm to the left arm and place it left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+  [  0.5s] cannot plan fork with left arm (fork->relay: no collision-free IK chain); repairing
+  [  0.5s] repair: B(right): fork -> hand-off pad
+  [  8.5s] cannot plan fork with right arm (fork->fork_target: no collision-free IK chain); repairing
+  [  8.5s] repair: A(left): fork -> left of plate
+== handoff_fork ep8: OK placed={'fork': True} extra=[] wall=17s
+handoff_fork ep9 seed 14009: 'Pass the fork over to the left arm, then set it to the left of the plate.'
+  [  0.5s] plan: 2 steps, 2 phases (cached)
+== handoff_fork ep9: OK placed={'fork': True} extra=[] wall=16s
+==== handoff_fork: 10/10
+full_setting ep0 seed 15000: 'Set out the fork, the spoon and the cup around the plate.'
+  [  0.5s] plan: 3 steps, 2 phases (7.1s LLM)
+== full_setting ep0: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=[] wall=22s
+full_setting ep1 seed 15001: 'Place the fork left and the spoon right of the plate, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (7.1s LLM)
+== full_setting ep1: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=[] wall=22s
+full_setting ep2 seed 15002: 'Place the fork left and the spoon right of the plate, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== full_setting ep2: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=[] wall=8s
+full_setting ep3 seed 15003: 'Set out the fork, the spoon and the cup around the plate.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== full_setting ep3: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=[] wall=14s
+full_setting ep4 seed 15004: 'Set out the fork, the spoon and the cup around the plate.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+  [ 13.7s] camera: cup not at top right; re-planning from its new pose
+  [ 13.7s] camera: cup not visible; can't plan it
+== full_setting ep4: FAIL placed={'fork': True, 'spoon': True, 'cup': False} extra=[] wall=15s
+full_setting ep5 seed 15005: 'Set out the fork, the spoon and the cup around the plate.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== full_setting ep5: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=[] wall=8s
+full_setting ep6 seed 15006: 'Place the fork left and the spoon right of the plate, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== full_setting ep6: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=[] wall=14s
+full_setting ep7 seed 15007: 'Set out the fork, the spoon and the cup around the plate.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== full_setting ep7: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=[] wall=15s
+full_setting ep8 seed 15008: 'Set out the fork, the spoon and the cup around the plate.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+  [  7.0s] cannot plan cup with right arm (cup->cup_target: OMPL ->home); repairing
+  [  7.0s] no feasible repair for cup
+== full_setting ep8: FAIL placed={'fork': True, 'spoon': True, 'cup': False} extra=[] wall=7s
+full_setting ep9 seed 15009: 'Place the fork left and the spoon right of the plate, then put the cup at the top right.'
+  [  0.5s] plan: 3 steps, 2 phases (cached)
+== full_setting ep9: OK placed={'fork': True, 'spoon': True, 'cup': True} extra=[] wall=15s
+==== full_setting: 8/10
+{
+ "fork_left": {
+  "successes": 10,
+  "episodes": 10,
+  "success_rate": 1.0
+ },
+ "spoon_right": {
+  "successes": 10,
+  "episodes": 10,
+  "success_rate": 1.0
+ },
+ "cup_tr": {
+  "successes": 9,
+  "episodes": 10,
+  "success_rate": 0.9
+ },
+ "set_table": {
+  "successes": 9,
+  "episodes": 10,
+  "success_rate": 0.9
+ },
+ "handoff_fork": {
+  "successes": 10,
+  "episodes": 10,
+  "success_rate": 1.0
+ },
+ "full_setting": {
+  "successes": 8,
+  "episodes": 10,
+  "success_rate": 0.8
+ }
+}
