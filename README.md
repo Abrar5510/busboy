@@ -196,6 +196,23 @@ _Pending: filled from `results/*.json`._ All runs use held-out seeds, 10 episode
 - **Latency.** p50 per action chunk on the development CPU: torch 131 ms, OpenVINO f32 119 ms, OpenVINO INT8 **50 ms** (2.6×). That's an Apple M4, measured while SmolVLA trained on the same machine; Intel numbers come from `scripts/intel_quickstart.sh`.
 - **Export.** f32 parity with PyTorch is 4.8e-4 rad. The INT8 model (weights and activations, NNCF with 300 calibration scenes) is 66 MB → 34 MB, with a maximum action difference of 0.016 rad from f32.
 
+## Demo video plan
+
+The evaluation already renders everything the demo needs: every episode video carries the command text,
+inference latency, seed and randomization level, and ends on a SUCCESS/FAIL banner listing which objects were
+placed. `scripts/make_reel.py` tiles 10 seeds of a task into one grid clip.
+
+Suggested 1–2 minute sequence:
+1. **Command → action.** One `fork_left` episode full-frame: the instruction is on screen, the scene is randomized, and the left arm places the fork.
+2. **Dual-arm at once.** One `set_table` episode: both arms work simultaneously.
+3. **Hand-off.** One `handoff_fork` episode: the fork starts out of the left arm's reach, the right arm sets it on the relay, the left arm takes it and places it. This is the coordinated two-arm beat the brief asks for.
+4. **Multi-step.** One `full_setting` episode: fork and spoon together, then the cup.
+5. **10 randomized seeds.** `results/videos/reel_*.mp4` grids, one per task, with the success rate on screen.
+6. **Intel optimization.** The benchmark chart: PyTorch vs OpenVINO f32 vs INT8, and the parity number. Run `scripts/intel_quickstart.sh` on Core Ultra hardware for figures that can be labelled Intel.
+
+Assets: `results/videos/` (per-episode clips and reels), `results/*.json` (numbers behind every claim),
+`python -m scripts.results_table --latency` (the table, regenerated from those JSON files).
+
 ## Rubric mapping
 
 | Criterion | Where to look |
