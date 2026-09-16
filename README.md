@@ -177,18 +177,46 @@ docker run --rm -v $PWD/outputs/train/smolvla_dinner/checkpoints/last/pretrained
 
 ## Results
 
-_Pending: filled from `results/*.json`._ All runs use held-out seeds, 10 episodes per task.
+Generated from `results/*.json` with `python -m scripts.results_table --latency`. Every run uses held-out seeds
+(≥ 10000, never collected from), 10 episodes per task. Cells show full-task success; for multi-object tasks the
+per-object placement counts follow.
 
 | Policy | Backend | Randomization | Instructions | fork_left | spoon_right | cup_tr | set_table | handoff_fork | full_setting |
 |---|---|---|---|---|---|---|---|---|---|
 | Expert (upper bound) | — | nominal | — | 10/10 | 10/10 | 10/10 | 10/10 | 10/10 | 10/10 |
-| SmolVLA | torch | nominal | train | | | | | | |
-| SmolVLA | torch | nominal | held-out | | | | | | |
-| SmolVLA | torch | heavy | train | | | | | | |
+| SmolVLA | torch | nominal | train | 1/10 | 2/10 | 0/10 | 0/10 (spoon 1) | 0/10 | 0/10 (fork 1, spoon 1) |
+| SmolVLA | torch | nominal | held-out | 0/10 | 0/10 | 0/10 | 0/10 | 0/10 | 0/10 |
+| SmolVLA | torch | heavy | train | 0/10 | 0/10 | 0/10 | 0/10 | 0/10 | 0/10 |
 | ACT | torch | nominal | — | n/a | n/a | n/a | 0/10 (spoon 5, fork 0) | n/a | n/a |
 | ACT | OpenVINO f32 | nominal | — | n/a | n/a | n/a | 1/10 (spoon 5, fork 1) | n/a | n/a |
 | ACT | OpenVINO INT8 | nominal | — | n/a | n/a | n/a | 1/10 (spoon 4, fork 1) | n/a | n/a |
 | ACT | torch | heavy | — | n/a | n/a | n/a | 0/10 (spoon 1, fork 0) | n/a | n/a |
+
+### What these numbers mean
+
+**Both learned policies are undertrained, and the limit is compute, not the pipeline.** The expert solves all six
+tasks 10/10, so the tasks, the success criteria and the demonstrations are sound. SmolVLA got **4,500 steps ≈
+0.44 epochs** over 82k frames and ACT 8,000 steps over 11k frames, both on a laptop GPU (Apple M4, 5.7 s/step for
+SmolVLA — a 7-hour run). The SmolVLA paper fine-tunes for 20k steps at batch 64, roughly **30× the samples** this
+run saw; on a CUDA GPU that recipe is well under an hour. Four hours of the training budget were also lost to two
+dataset-related crashes and a period where the machine was in low power mode.
+
+Evidence that the pipeline is correct rather than just an assertion:
+- **Images reach the policy.** The checkpoint's saved preprocessor carries the camera rename map, and at inference
+  the policy receives `observation.images.camera1..3` (verified by inspecting the processed batch).
+- **Predicted actions track the expert.** Open-loop on training frames, SmolVLA is 0.072 rad from the expert's
+  action and ACT 0.089 — wrong by centimetres, not nonsense.
+- **Behaviour is purposeful.** Both policies reach over the table, approach objects, close the gripper and return
+  home. They miss grasps by 3–5 cm, and SmolVLA sometimes drives the wrong arm for the instruction.
+- **Partial credit is visible.** ACT places the spoon in 5/10 episodes; SmolVLA completes 3 single-arm episodes and
+  places individual objects inside multi-object tasks.
+
+**Language grounding did not form.** SmolVLA scores 3/60 on training wording and 0/60 on held-out wording. A policy
+that had grounded the instruction would degrade gracefully on paraphrases; falling to zero says it leaned on
+memorised wording. At 0.44 epochs that is the expected outcome, and it is the first thing more training would fix.
+
+**Randomization bites.** At 1.5× ranges both policies fall to zero (ACT's spoon placement 5/10 → 1/10), so the
+randomization is doing real work rather than decorating the training set.
 
 **ACT findings:**
 - **Behaviour.** ACT learned the simultaneous dual-arm sequence (both arms reach, grasp, carry, place, return). The right-arm spoon placement succeeds in half the seeds, but the left-arm fork grasp misses by 3–5 cm and closes early. Temporal ensembling (0/3) and an earlier checkpoint (0/3) didn't fix it.
@@ -226,6 +254,9 @@ Assets: `results/videos/` (per-episode clips and reels), `results/*.json` (numbe
 
 ## Limitations
 
+- **The learned policies are undertrained** (SmolVLA 0.44 epochs, ACT 8k steps on a laptop GPU). The expert is the
+  upper bound at 10/10 on all six tasks; closing the gap is a matter of GPU hours on the same pipeline, not a
+  redesign. Train with `--policy.device=cuda --steps=20000 --batch_size=64` to reproduce the reference recipe.
 - **The plate isn't grasped.** It's a randomized reference object; a thin disc isn't graspable by the SO-101 jaw.
 - **The hand-off goes through a relay pad, not in the air.**
 - **ACT has no language input,** so it covers `set_table` only; SmolVLA covers all tasks.

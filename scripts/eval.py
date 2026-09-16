@@ -140,6 +140,8 @@ def main():
     ap.add_argument("--ov-device", default="CPU", help="OpenVINO device for --backend openvino: CPU, GPU, NPU")
     ap.add_argument("--act-temporal-ensemble", type=float, default=None,
                     help="ACT: predict every step and exponentially average overlapping chunks (e.g. 0.01)")
+    ap.add_argument("--n-action-steps", type=int, default=None,
+                    help="execute this many actions per inference instead of the policy default (re-plan more often)")
     ap.add_argument("--episodes", type=int, default=10, help="per task")
     ap.add_argument("--rand", default="nominal", choices=["nominal", "heavy"])
     ap.add_argument("--paraphrases", default="train", choices=["train", "eval", "all"])
@@ -159,14 +161,17 @@ def main():
     tasks = ["set_table"] if args.policy == "act" else args.tasks  # ACT has no language input: set_table only
 
     policy_cls = get_policy_class(args.policy)
-    if te and args.backend == "torch":
+    cfg = None
+    if (te and args.backend == "torch") or args.n_action_steps is not None:
         from lerobot.configs.policies import PreTrainedConfig
 
         cfg = PreTrainedConfig.from_pretrained(args.ckpt)
-        cfg.temporal_ensemble_coeff, cfg.n_action_steps = args.act_temporal_ensemble, 1
-        policy = policy_cls.from_pretrained(args.ckpt, config=cfg).to(args.device).eval()
-    else:
-        policy = policy_cls.from_pretrained(args.ckpt).to(args.device).eval()
+        if te and args.backend == "torch":
+            cfg.temporal_ensemble_coeff, cfg.n_action_steps = args.act_temporal_ensemble, 1
+        if args.n_action_steps is not None:  # re-plan more often than the policy's default chunk
+            cfg.n_action_steps = args.n_action_steps
+    policy = (policy_cls.from_pretrained(args.ckpt, config=cfg) if cfg is not None
+              else policy_cls.from_pretrained(args.ckpt)).to(args.device).eval()
     pre, post = make_pre_post_processors(policy.config, args.ckpt,
                                          preprocessor_overrides={"device_processor": {"device": args.device}})
     if args.backend == "openvino":

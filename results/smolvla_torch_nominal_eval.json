@@ -1,0 +1,74 @@
+{
+  "policy": "smolvla",
+  "backend": "torch",
+  "ckpt": "outputs/train/smolvla_dinner/checkpoints/last/pretrained_model",
+  "rand": "nominal",
+  "paraphrases": "eval",
+  "device": "mps",
+  "act_temporal_ensemble": null,
+  "tasks": {
+    "fork_left": {
+      "success_rate": 0.0,
+      "successes": 0,
+      "episodes": 10,
+      "mean_time_to_success_s": null,
+      "object_placed": {
+        "fork": 0
+      }
+    },
+    "spoon_right": {
+      "success_rate": 0.0,
+      "successes": 0,
+      "episodes": 10,
+      "mean_time_to_success_s": null,
+      "object_placed": {
+        "spoon": 0
+      }
+    },
+    "cup_tr": {
+      "success_rate": 0.0,
+      "successes": 0,
+      "episodes": 10,
+      "mean_time_to_success_s": null,
+      "object_placed": {
+        "cup": 0
+      }
+    },
+    "set_table": {
+      "success_rate": 0.0,
+      "successes": 0,
+      "episodes": 10,
+      "mean_time_to_success_s": null,
+      "object_placed": {
+        "fork": 0,
+        "spoon": 0
+      }
+    },
+    "handoff_fork": {
+      "success_rate": 0.0,
+      "successes": 0,
+      "episodes": 10,
+      "mean_time_to_success_s": null,
+      "object_placed": {
+        "fork": 0
+      }
+    },
+    "full_setting": {
+      "success_rate": 0.0,
+      "successes": 0,
+      "episodes": 10,
+      "mean_time_to_success_s": null,
+      "object_placed": {
+        "fork": 0,
+        "spoon": 0,
+        "cup": 0
+      }
+    }
+  },
+  "p50_infer_ms": 714.4487714977004,
+  "p95_infer_ms": 720.0848038552067,
+  "machine": {
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "processor": "arm"
+  }
+}
