@@ -1,0 +1,57 @@
+{
+  "policy": "expert",
+  "rand": "heavy",
+  "tasks": {
+    "fork_left": {
+      "successes": 9,
+      "episodes": 10,
+      "success_rate": 0.9,
+      "fails": {
+        "fork->fork_target: no collision-free IK chain": 1
+      }
+    },
+    "spoon_right": {
+      "successes": 9,
+      "episodes": 10,
+      "success_rate": 0.9,
+      "fails": {
+        "spoon->spoon_target: no collision-free IK chain": 1
+      }
+    },
+    "cup_tr": {
+      "successes": 9,
+      "episodes": 10,
+      "success_rate": 0.9,
+      "fails": {
+        "cup->cup_target: no collision-free IK chain": 1
+      }
+    },
+    "set_table": {
+      "successes": 9,
+      "episodes": 10,
+      "success_rate": 0.9,
+      "fails": {
+        "fork->fork_target: no collision-free IK chain": 1
+      }
+    },
+    "handoff_fork": {
+      "successes": 9,
+      "episodes": 10,
+      "success_rate": 0.9,
+      "fails": {
+        "fork->relay: no collision-free IK chain": 1
+      }
+    },
+    "full_setting": {
+      "successes": 4,
+      "episodes": 10,
+      "success_rate": 0.4,
+      "fails": {
+        "execution (success check failed)": 1,
+        "spoon->spoon_target: no collision-free IK chain": 2,
+        "fork->fork_target: no collision-free IK chain": 2,
+        "cup->cup_target: no collision-free IK chain": 1
+      }
+    }
+  }
+}

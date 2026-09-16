@@ -8,3 +8,9 @@ MUJOCO_LOG.TXT
 results/smoke/
 results/*.bin
 results/*.xml
+models/
+results/*.out
+results/bench.log
+results/smolvla_export.log
+results/smolvla_ov_*.log
+.DS_Store

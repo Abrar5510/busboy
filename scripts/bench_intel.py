@@ -1,4 +1,5 @@
-"""ACT latency and throughput: PyTorch CPU vs OpenVINO (f32 and INT8 IRs) on every OpenVINO device found.
+"""Latency and throughput on every OpenVINO device found: ACT (PyTorch CPU vs OpenVINO f32 / INT8 IRs), the full
+SmolVLA sampler IR (f32 / INT8 weights), and with --planner the INT4 LLM planner.
 
 Run this on Intel Core Ultra hardware (CPU / Arc iGPU / NPU) for Intel claims; elsewhere it still runs but the
 report marks intel=false.
@@ -45,6 +46,9 @@ def main():
     ap.add_argument("--ckpt", required=True)
     ap.add_argument("--ir", default="results/act_dinner.xml")
     ap.add_argument("--ir-int8", default="results/act_dinner_int8.xml")
+    ap.add_argument("--smolvla-ir", default="results/smolvla_dinner.xml", help="skipped if missing")
+    ap.add_argument("--smolvla-ckpt", help="also time the PyTorch SmolVLA sampler (f32, CPU) as the baseline")
+    ap.add_argument("--planner", action="store_true", help="also time the LLM planner (dinner.planner) per device")
     ap.add_argument("--out", default="results/intel_bench.json")
     args = ap.parse_args()
 
@@ -89,8 +93,60 @@ def main():
             report[f"act_openvino_{name}"] = bench(lambda c=c: c(np_inputs))
         except Exception as e:  # one device failing to compile this graph shouldn't sink the whole report
             report[f"act_openvino_{name}"] = {"error": str(e)[:300]}
+    # SmolVLA full sampler (10 flow-matching steps per chunk): f32 and INT8-weight IRs on every device.
+    for ir in (Path(args.smolvla_ir), Path(args.smolvla_ir).with_name(Path(args.smolvla_ir).stem + "_int8.xml")):
+        if not ir.exists():
+            continue
+        m = core.read_model(str(ir))
+        feeds = {}
+        for inp in m.inputs:
+            shp, name = inp.get_partial_shape().to_shape(), inp.get_any_name()
+            et = inp.get_element_type().get_type_name()
+            feeds[name] = (np.random.rand(*shp).astype(np.float32) if et == "f32" else
+                           np.ones(shp, dtype=bool) if et == "boolean" else np.ones(shp, dtype=np.int64))
+        tag = "smolvla" + ("_int8" if "int8" in ir.stem else "")
+        if args.smolvla_ckpt and tag == "smolvla":
+            from scripts.export_openvino import SmolVLAWrapper
+
+            sp = get_policy_class("smolvla").from_pretrained(args.smolvla_ckpt).to("cpu").float().eval()
+            wrapper = SmolVLAWrapper(sp).eval()
+            tin = [torch.from_numpy(v) for v in feeds.values()]  # IR input order == wrapper argument order
+
+            def smol_torch():
+                with torch.inference_mode():
+                    wrapper(*tin)
+
+            report["smolvla_torch_cpu_f32"] = bench(smol_torch, warmup=2, n=10)
+            del sp, wrapper
+        runs = [("cpu_f32", "CPU", {"INFERENCE_PRECISION_HINT": "f32"}), (f"cpu_{cpu_default}", "CPU", {})]
+        runs += [(d.lower().replace(".", ""), d, {}) for d in core.available_devices if d.startswith(("GPU", "NPU"))]
+        for name, dev, cfg in runs:
+            try:
+                c = core.compile_model(m, dev, {"PERFORMANCE_HINT": "LATENCY", **cfg})
+                report[f"{tag}_openvino_{name}"] = bench(lambda c=c: c(feeds), warmup=2, n=10)
+            except Exception as e:
+                report[f"{tag}_openvino_{name}"] = {"error": str(e)[:300]}
+
+    if args.planner:
+        from dinner.planner import MODEL_DIR, Planner
+
+        for dev in [d for d in core.available_devices if d.startswith(("CPU", "GPU", "NPU"))]:
+            try:
+                pl = Planner(device=dev, use_cache=False)
+                for cmd in ("Set the table.", "Hand the fork from arm B to arm A and place it left of the plate."):
+                    pl.plan(cmd)
+                report[f"planner_{MODEL_DIR.name}_{dev.lower()}"] = {
+                    "p50_s_per_generation": float(np.median(pl.latency_s)), "n": len(pl.latency_s),
+                    "weights": "INT4"}
+            except Exception as e:
+                report[f"planner_{MODEL_DIR.name}_{dev.lower()}"] = {"error": str(e)[:300]}
+
     report["speedup_p50_vs_torch"] = {k.removeprefix("act_openvino_"): report["act_torch_cpu"]["p50_ms"] / v["p50_ms"]
                                       for k, v in report.items() if k.startswith("act_openvino_") and "p50_ms" in v}
+    if "smolvla_torch_cpu_f32" in report:
+        report["smolvla_speedup_p50_vs_torch"] = {
+            k.removeprefix("smolvla_"): report["smolvla_torch_cpu_f32"]["p50_ms"] / v["p50_ms"]
+            for k, v in report.items() if "_openvino_" in k and k.startswith("smolvla") and "p50_ms" in v}
     if not report["machine"]["intel"]:
         print(f"WARNING: CPU is {cpu!r}, not Intel; do not report these numbers as Intel results.")
     with open(args.out, "w") as f:

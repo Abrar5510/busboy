@@ -78,6 +78,34 @@ class OpenVINOACT:
         return torch.from_numpy((w[:, None] * preds).sum(0) / w.sum())[None]
 
 
+class OpenVINOSmolVLA:
+    """Full SmolVLA sampler IR (scripts/export_openvino.py) behind select_action/reset. Draws the flow-matching
+    noise itself (seeded, so runs repeat) and queues n_action_steps actions per call, like the torch policy."""
+
+    def __init__(self, ir_path, config, device="CPU", seed=0):
+        import openvino as ov
+
+        cfg = {} if device.startswith("NPU") else {"INFERENCE_PRECISION_HINT": "f32"}
+        self.model = ov.Core().compile_model(str(ir_path), device, cfg)
+        self.config = config
+        self.keys = list(config.image_features)
+        self.rng = np.random.default_rng(seed)
+        self.reset()
+
+    def reset(self):
+        self.queue = []
+
+    def select_action(self, batch):
+        if not self.queue:
+            c = self.config
+            noise = self.rng.standard_normal((1, c.chunk_size, c.max_action_dim)).astype(np.float32)
+            inputs = [batch["observation.state"].numpy(), batch["observation.language.tokens"].numpy(),
+                      batch["observation.language.attention_mask"].bool().numpy(), noise]
+            chunk = self.model(inputs + [batch[k].numpy() for k in self.keys])[0]
+            self.queue = [torch.from_numpy(chunk[:, i]) for i in range(c.n_action_steps)]
+        return self.queue.pop(0)
+
+
 def _text(frame, s, org, scale=0.6, color=(255, 255, 255)):
     cv2.putText(frame, s, org, cv2.FONT_HERSHEY_SIMPLEX, scale, (0, 0, 0), 4)
     cv2.putText(frame, s, org, cv2.FONT_HERSHEY_SIMPLEX, scale, color, 2)
@@ -91,7 +119,7 @@ def overlay(obs, text, p50_ms, t, seed, level, banner=None):
     _text(frame, f"seed {seed} | randomization: {level}", (10, 50))
     if banner is not None:
         ok = banner.startswith("SUCCESS")
-        _text(frame, banner, (10, frame.shape[0] - 24), 1.4, (80, 220, 80) if ok else (80, 80, 240))
+        _text(frame, banner, (10, frame.shape[0] - 24), 1.4, (80, 220, 80) if ok else (240, 80, 80))  # RGB
     return frame
 
 
@@ -136,7 +164,7 @@ def main():
     ap.add_argument("--policy", required=True, choices=["act", "smolvla"])
     ap.add_argument("--ckpt", required=True, help="pretrained_model dir or HF repo id")
     ap.add_argument("--backend", default="torch", choices=["torch", "openvino"])
-    ap.add_argument("--ir", default="results/act_dinner.xml", help="OpenVINO IR for --backend openvino")
+    ap.add_argument("--ir", default=None, help="OpenVINO IR for --backend openvino (default results/<policy>_dinner.xml)")
     ap.add_argument("--ov-device", default="CPU", help="OpenVINO device for --backend openvino: CPU, GPU, NPU")
     ap.add_argument("--act-temporal-ensemble", type=float, default=None,
                     help="ACT: predict every step and exponentially average overlapping chunks (e.g. 0.01)")
@@ -155,8 +183,7 @@ def main():
 
     te = args.policy == "act" and args.act_temporal_ensemble is not None
     if args.backend == "openvino":
-        if args.policy != "act":
-            raise SystemExit("--backend openvino is only supported for ACT")
+        args.ir = args.ir or f"results/{args.policy}_dinner.xml"
         args.device = "cpu"  # pre/post processors run on CPU around the IR
     tasks = ["set_table"] if args.policy == "act" else args.tasks  # ACT has no language input: set_table only
 
@@ -174,8 +201,10 @@ def main():
               else policy_cls.from_pretrained(args.ckpt)).to(args.device).eval()
     pre, post = make_pre_post_processors(policy.config, args.ckpt,
                                          preprocessor_overrides={"device_processor": {"device": args.device}})
-    if args.backend == "openvino":
+    if args.backend == "openvino" and args.policy == "act":
         policy = OpenVINOACT(args.ir, policy.config, args.ov_device, args.act_temporal_ensemble if te else None)
+    elif args.backend == "openvino":
+        policy = OpenVINOSmolVLA(args.ir, policy.config, args.ov_device)
     infer_every = 1 if te else policy.config.n_action_steps  # one model call per chunk; the rest are queue pops
 
     env = DinnerEnv()

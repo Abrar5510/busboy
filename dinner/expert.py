@@ -28,6 +28,7 @@ from ompl import util as ou
 from dinner.env import ARMS, GRIP_CLOSED, GRIP_OPEN, HOME, OBJECTS, RELAY_YAW, TASKS, DinnerEnv, _rot2, _yaw_quat, task_phases
 
 ou.setLogLevel(ou.LogLevel.LOG_WARN)
+ou.RNG.setSeed(1)  # RRTConnect is randomized; a fixed seed (OMPL rejects 0) makes eval results repeatable
 
 ARM_JOINTS = ("shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll")
 DT = 1 / 30
@@ -136,6 +137,7 @@ class Expert:
         self.table_geoms = {m.geom("table_top").id}
         self.fail = None  # reason the last plan returned None
         self.world = None  # qpos the planner treats as the world; None = env.data (the live sim state)
+        self.scene = None  # perceived {"objects": {name: {"pos", "yaw"}}, "targets": {site: xyz}}; None = sim state
 
     def _world_qpos(self):
         return self.world if self.world is not None else self.env.data.qpos
@@ -156,11 +158,24 @@ class Expert:
     def _target_yaw(self, obj, site):
         return RELAY_YAW if site == "relay" else self.env.target_yaw.get(obj, 0.0)
 
+    def _obj_pose(self, obj):
+        if self.scene is not None:
+            o = self.scene["objects"][obj]
+            return np.array(o["pos"]), o["yaw"]
+        b = self.env.body_id[obj]
+        xm = self.env.data.xmat[b]
+        return self.env.data.xpos[b].copy(), float(np.arctan2(xm[3], xm[0]))
+
+    def _site_pos(self, site):
+        if self.scene is not None:
+            return np.array(self.scene["targets"][site], float)
+        return self.env.data.site_xpos[self.env.model.site(site).id].copy()
+
     def _placed(self, world, obj, site):
         """Copy of a world qpos with `obj` resting at `site`."""
         env = self.env
         w, a = world.copy(), env.free_adr[obj]
-        t = env.data.site_xpos[env.model.site(site).id]
+        t = self._site_pos(site)
         w[a:a + 3] = [t[0], t[1], env.model.qpos0[a + 2]]
         w[a + 3:a + 7] = _yaw_quat(self._target_yaw(obj, site))
         return w
@@ -203,9 +218,10 @@ class Expert:
         return None
 
     # ------------------------------------------------------------------ OMPL
-    def plan(self, arm, q_from, q_to, held=None):
-        """Joint-space RRTConnect for one arm in the planning world."""
-        is_valid = self.world_valid(arm, held, GRIP_CLOSED if held else GRIP_OPEN)
+    def plan(self, arm, q_from, q_to, held=None, grip=None):
+        """Joint-space RRTConnect for one arm in the planning world. `grip`: gripper opening to check with
+        (default: closed when holding, else GRIP_OPEN)."""
+        is_valid = self.world_valid(arm, held, grip if grip is not None else GRIP_CLOSED if held else GRIP_OPEN)
         if not (is_valid(q_from) and is_valid(q_to)):
             return None
         space = ob.RealVectorStateSpace(5)
@@ -232,16 +248,12 @@ class Expert:
 
     # ------------------------------------------------------------------ pick-place
     def plan_pick_place(self, arm, obj, site):
-        env = self.env
-        m = env.model
-        b = env.body_id[obj]
-        opos, xm = env.data.xpos[b].copy(), env.data.xmat[b].copy()  # live pose: phases plan from the real state
-        tpos = env.data.site_xpos[m.site(site).id].copy()
+        opos, oyaw = self._obj_pose(obj)  # live (or perceived) pose: phases plan from the current state
+        tpos = self._site_pos(site)
         if obj == "cup":
             dirs = [np.array(v, float) for v in ([1, 0], [0, 1], [-1, 0], [0, -1])]
             pairs = [(cg, cp) for cg in dirs for cp in dirs]
         else:  # the jaw axis is fixed relative to the handle; rotate it by the yaw change to keep head direction
-            oyaw = np.arctan2(xm[3], xm[0])
             rot = _rot2(self._target_yaw(obj, site) - oyaw)
             pairs = [(s * _across(oyaw), rot @ (s * _across(oyaw))) for s in (1, -1)]
 
@@ -271,19 +283,19 @@ class Expert:
             self.fail = f"{obj}->{site}: no collision-free IK chain"
             return None
 
+        # The cup is gripped with a tilted approach; at 0.8 the jaws brush it on approach and drag it over on
+        # retreat. 1.2 (~95 mm gap) clears a 40 mm cup. The pause after opening lets it settle before retreat.
+        go = 1.2 if obj == "cup" else GRIP_OPEN
         home = HOME[:5]
         before = self.world
         p1 = self.plan(arm, home, q_pre)
         p2 = p1 and self.plan(arm, q_pre, q_above, held=obj)
         self.world = self._placed(self._world_qpos(), obj, site)  # go home around the object where it now is
-        p3 = p2 and self.plan(arm, q_above, home)
+        p3 = p2 and self.plan(arm, q_above, home, grip=go)  # with the jaws as wide as they really are
         self.world = before
         if not p3:
             self.fail = f"{obj}->{site}: OMPL " + ("home->pregrasp" if not p1 else "carry" if not p2 else "->home")
             return None
-        # The cup is gripped with a tilted approach; at 0.8 the jaws brush it on approach and drag it over on
-        # retreat. 1.2 (~95 mm gap) clears a 40 mm cup. The pause after opening lets it settle before retreat.
-        go = 1.2 if obj == "cup" else GRIP_OPEN
         return (_interp(p1, HOME[5], go, MAX_VEL)
                 + _interp([q_pre, q_grasp], go, go, FINE_VEL)
                 + _hold(q_grasp, go, GRIP_CLOSED)
@@ -339,6 +351,8 @@ if __name__ == "__main__":
     ap.add_argument("--seeds", type=int, default=20)
     ap.add_argument("--tasks", nargs="+", default=list(TASKS))
     ap.add_argument("--level", default="nominal")
+    ap.add_argument("--eval-seeds", action="store_true",
+                    help="use scripts.eval's held-out seeds (10000 + 1000*task + ep) and write results/expert_<level>.json")
     args = ap.parse_args()
 
     env = DinnerEnv(render=False)
@@ -354,12 +368,20 @@ if __name__ == "__main__":
     assert ex.plan("left", HOME[:5], HOME[:5] + np.array([0.4, 0.3, -0.3, 0.0, 0.5])) is not None, "trivial plan failed"
     assert np.array_equal(before, env.data.qpos), "planning mutated env.data"
 
+    report = {}
     for task in args.tasks:
         ok, fails, t0 = 0, {}, time.time()
-        for seed in range(args.seeds):
+        for ep in range(args.seeds):
+            seed = 10000 + 1000 * list(TASKS).index(task) + ep if args.eval_seeds else ep
             r = rollout(env, ex, task, seed, args.level)
             ok += bool(r)
             if not r:
                 reason = ex.fail if r is None else "execution (success check failed)"
                 fails[reason] = fails.get(reason, 0) + 1
         print(f"{task:12s} success {ok}/{args.seeds}  {(time.time() - t0) / args.seeds:.1f}s/ep  fails {fails}", flush=True)
+        report[task] = {"successes": ok, "episodes": args.seeds, "success_rate": ok / args.seeds, "fails": fails}
+    if args.eval_seeds:
+        import json
+
+        with open(f"results/expert_{args.level}.json", "w") as f:
+            json.dump({"policy": "expert", "rand": args.level, "tasks": report}, f, indent=2)

@@ -1,0 +1,48 @@
+{
+  "policy": "expert",
+  "rand": "nominal",
+  "tasks": {
+    "fork_left": {
+      "successes": 10,
+      "episodes": 10,
+      "success_rate": 1.0,
+      "fails": {}
+    },
+    "spoon_right": {
+      "successes": 10,
+      "episodes": 10,
+      "success_rate": 1.0,
+      "fails": {}
+    },
+    "cup_tr": {
+      "successes": 9,
+      "episodes": 10,
+      "success_rate": 0.9,
+      "fails": {
+        "cup->cup_target: no collision-free IK chain": 1
+      }
+    },
+    "set_table": {
+      "successes": 9,
+      "episodes": 10,
+      "success_rate": 0.9,
+      "fails": {
+        "fork->fork_target: no collision-free IK chain": 1
+      }
+    },
+    "handoff_fork": {
+      "successes": 10,
+      "episodes": 10,
+      "success_rate": 1.0,
+      "fails": {}
+    },
+    "full_setting": {
+      "successes": 9,
+      "episodes": 10,
+      "success_rate": 0.9,
+      "fails": {
+        "cup->cup_target: no collision-free IK chain": 1
+      }
+    }
+  }
+}

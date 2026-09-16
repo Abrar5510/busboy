@@ -1,0 +1,48 @@
+{
+  "policy": "smolvla",
+  "backend": "openvino-cpu-int8",
+  "ckpt": "outputs/train/smolvla_dinner/checkpoints/last/pretrained_model",
+  "rand": "nominal",
+  "paraphrases": "train",
+  "device": "CPU",
+  "act_temporal_ensemble": null,
+  "tasks": {
+    "fork_left": {
+      "success_rate": 0.0,
+      "successes": 0,
+      "episodes": 10,
+      "mean_time_to_success_s": null,
+      "object_placed": {
+        "fork": 0
+      }
+    },
+    "spoon_right": {
+      "success_rate": 0.0,
+      "successes": 0,
+      "episodes": 10,
+      "mean_time_to_success_s": null,
+      "object_placed": {
+        "spoon": 0
+      }
+    },
+    "cup_tr": "n/a",
+    "set_table": {
+      "success_rate": 0.0,
+      "successes": 0,
+      "episodes": 10,
+      "mean_time_to_success_s": null,
+      "object_placed": {
+        "fork": 0,
+        "spoon": 1
+      }
+    },
+    "handoff_fork": "n/a",
+    "full_setting": "n/a"
+  },
+  "p50_infer_ms": 2034.5865834970027,
+  "p95_infer_ms": 2257.164814247517,
+  "machine": {
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "processor": "arm"
+  }
+}

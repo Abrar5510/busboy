@@ -5,3 +5,4 @@ outputs
 results/videos
 **/__pycache__
 *.onnx
+models

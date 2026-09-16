@@ -12,32 +12,73 @@
     }
   },
   "act_torch_cpu": {
-    "p50_ms": 86.10308349943807,
-    "p95_ms": 256.89441635031466,
-    "throughput_inferences_per_s": 8.734396218521587,
+    "p50_ms": 41.99789550330024,
+    "p95_ms": 44.705308352422435,
+    "throughput_inferences_per_s": 23.589003387677412,
     "n": 100
   },
   "act_openvino_cpu_f32": {
-    "p50_ms": 129.33779199920536,
-    "p95_ms": 186.72317354921688,
-    "throughput_inferences_per_s": 7.034158499570877,
+    "p50_ms": 48.0725835004705,
+    "p95_ms": 49.69627535538166,
+    "throughput_inferences_per_s": 20.841535141549773,
     "n": 100
   },
   "act_openvino_cpu_f16": {
-    "p50_ms": 64.9083749995043,
-    "p95_ms": 99.41153125046185,
-    "throughput_inferences_per_s": 14.070943851394942,
+    "p50_ms": 27.665333000186365,
+    "p95_ms": 29.091099698416656,
+    "throughput_inferences_per_s": 36.01106785616422,
     "n": 100
   },
   "act_openvino_cpu_int8": {
-    "p50_ms": 64.7376874994734,
-    "p95_ms": 85.66266250027184,
-    "throughput_inferences_per_s": 15.235390484446523,
+    "p50_ms": 25.599603999580722,
+    "p95_ms": 27.052322602685308,
+    "throughput_inferences_per_s": 38.884524831913595,
     "n": 100
   },
+  "smolvla_torch_cpu_f32": {
+    "p50_ms": 1070.5383335007355,
+    "p95_ms": 1079.7664162993897,
+    "throughput_inferences_per_s": 0.9361935711873346,
+    "n": 10
+  },
+  "smolvla_openvino_cpu_f32": {
+    "p50_ms": 2023.3937295051874,
+    "p95_ms": 2057.2672082984354,
+    "throughput_inferences_per_s": 0.4927577261622072,
+    "n": 10
+  },
+  "smolvla_openvino_cpu_f16": {
+    "p50_ms": 1140.607020999596,
+    "p95_ms": 1147.6661767541373,
+    "throughput_inferences_per_s": 0.8775557633133025,
+    "n": 10
+  },
+  "smolvla_int8_openvino_cpu_f32": {
+    "p50_ms": 2029.4240204966627,
+    "p95_ms": 2054.614772796049,
+    "throughput_inferences_per_s": 0.49228963966800376,
+    "n": 10
+  },
+  "smolvla_int8_openvino_cpu_f16": {
+    "p50_ms": 1171.7618125039735,
+    "p95_ms": 1255.3505711970502,
+    "throughput_inferences_per_s": 0.8439724381405319,
+    "n": 10
+  },
+  "planner_qwen3-1.7b-int4-ov_cpu": {
+    "p50_s_per_generation": 8.227678124501836,
+    "n": 2,
+    "weights": "INT4"
+  },
   "speedup_p50_vs_torch": {
-    "cpu_f32": 0.6657225407092698,
-    "cpu_f16": 1.3265327240143607,
-    "cpu_int8": 1.3300302625134466
+    "cpu_f32": 0.8736350835583695,
+    "cpu_f16": 1.5180694012617642,
+    "cpu_int8": 1.640568170663425
+  },
+  "smolvla_speedup_p50_vs_torch": {
+    "openvino_cpu_f32": 0.5290805827309405,
+    "openvino_cpu_f16": 0.938568949507733,
+    "int8_openvino_cpu_f32": 0.5275084569259911,
+    "int8_openvino_cpu_f16": 0.9136142875428492
   }
 }

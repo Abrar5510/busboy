@@ -7,6 +7,10 @@
 #     -v $PWD/results:/app/results \
 #     dinner-vla --policy smolvla --ckpt /app/ckpt --episodes 1 --video
 #
+# The agent (planner model mounted from scripts/get_models.sh):
+#   docker run --rm -v $PWD/models:/app/models:ro -v $PWD/results:/app/results \
+#     --entrypoint uv dinner-vla run --frozen python -m scripts.agent --eval --episodes 10
+#
 # If EGL cannot initialize without a GPU, add: -e MUJOCO_GL=osmesa -e PYOPENGL_PLATFORM=osmesa
 FROM python:3.12-slim
 
