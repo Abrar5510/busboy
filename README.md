@@ -218,6 +218,14 @@ memorised wording. At 0.44 epochs that is the expected outcome, and it is the fi
 **Randomization bites.** At 1.5× ranges both policies fall to zero (ACT's spoon placement 5/10 → 1/10), so the
 randomization is doing real work rather than decorating the training set.
 
+**Inference-time fixes don't rescue an undertrained policy** (tried, so you don't have to):
+- SmolVLA re-planning every 10 steps instead of its 50-step chunk (`--n-action-steps 10`): 0/10 on `fork_left` +
+  `spoon_right`, versus 3/10 with the default chunk. Re-planning more often just resamples noisier predictions.
+- ACT temporal ensembling (`--act-temporal-ensemble 0.01`): 0/3 on seeds the default also failed.
+- ACT at an earlier checkpoint (4k instead of 8k steps): 0/3, so this isn't late-training degradation.
+
+The lever that matters is training budget, not inference configuration.
+
 **ACT findings:**
 - **Behaviour.** ACT learned the simultaneous dual-arm sequence (both arms reach, grasp, carry, place, return). The right-arm spoon placement succeeds in half the seeds, but the left-arm fork grasp misses by 3–5 cm and closes early. Temporal ensembling (0/3) and an earlier checkpoint (0/3) didn't fix it.
 - **OpenVINO preserves behaviour.** Across torch, f32 and INT8, the per-object placement counts match within one episode (spoon 5 / 5 / 4).
